@@ -1,6 +1,6 @@
 <?php
-	include_once 'db_connect.php';
-	include_once 'login/functions.php';
+	include_once '../includes/db_connect.php';
+	include_once '../includes/functions.php';
 	secure_session_start();
 ?>
 
@@ -21,7 +21,7 @@
 </head>
 <body>
 	<!-- Navbar -->
-	<?php include 'views/navbar.php' ?>
+	<?php include '../views/navbar.php' ?>
 
 	<!-- Hero unit -->
 	<div class="jumbotron">
@@ -53,7 +53,7 @@
 		</div>
 
 		<!-- Footer -->
-		<?php include 'views/footer.php' ?>
+		<?php include '../views/footer.php' ?>
 	</div>
 </body>
 </html>
