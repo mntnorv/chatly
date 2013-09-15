@@ -8,6 +8,6 @@ function formhash(form, password) {
 	p.value = hex_sha512(password.value);
 	// Make sure the plaintext password doesn't get sent.
 	password.value = "";
-	// Finally submit the form.
-	form.submit();
+	// Return true to allow the form to be submitted
+	return true;
 }

@@ -2,7 +2,7 @@
 <html>
 <head>
 	<script type="text/javascript" src="/js/sha512.js"></script>
-	<script type="text/javascript" src="/js/forms.js"></script>	
+	<script type="text/javascript" src="/js/forms.js"></script>
 </head>
 <body>
 	<?php
