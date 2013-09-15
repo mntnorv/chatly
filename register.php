@@ -18,8 +18,7 @@
 	<!-- Javascript -->
 	<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
 	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="/js/sha512.js"></script>
-	<script type="text/javascript" src="/js/forms.js"></script>
+	<script type="text/javascript" src="/js/parsley.min.js"></script>
 </head>
 <body>
 	<!-- Navbar -->
@@ -34,23 +33,23 @@
 		<!-- Registration form -->
 		<div class="row">
 			<div class="col-sm-6">
-				<form class="form-horizontal" role="form">
+				<form class="form-horizontal" role="form" action="login/process_registration.php" method="post" data-validate="parsley">
 					<div class="form-group">
 						<label for="input_username" class="col-md-4 control-label">Username</label>
 						<div class="col-md-8">
-							<input type="text" class="form-control" id="input_username" placeholder="Username">
+							<input type="text" name="username" class="form-control" id="input_username" placeholder="Username" data-required="true" />
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="input_password" class="col-md-4 control-label">Password</label>
 						<div class="col-md-8">
-							<input type="password" class="form-control" id="input_password" placeholder="Password">
+							<input type="password" name="password" class="form-control" id="input_password" placeholder="Password" data-required="true" />
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="input_password" class="col-md-4 control-label">Confirm password</label>
 						<div class="col-md-8">
-							<input type="password" class="form-control" id="input_password" placeholder="Confirm password">
+							<input type="password" name="password_confirm" class="form-control" id="input_password_confirm" placeholder="Confirm password" data-required="true" data-equalto="#input_password" />
 						</div>
 					</div>
 					<div class="form-group">
@@ -62,7 +61,7 @@
 			</div>
 			<div class="col-sm-6">
 				<div id="chatly-logo-back">
-					<img class="img-responsive" src="chatly.png" />
+					<img class="img-responsive" src="/images/chatly.png" />
 				</div>
 			</div>
 		</div>

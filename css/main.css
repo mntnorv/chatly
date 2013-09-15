@@ -3,6 +3,26 @@ body {
 	padding-bottom: 20px;
 }
 
+input.parsley-success, textarea.parsley-success {
+	color: #468847 !important;
+	background-color: #DFF0D8 !important;
+	border: 1px solid #D6E9C6 !important;
+}
+
+input.parsley-error, textarea.parsley-error {
+	color: #B94A48 !important;
+	background-color: #F2DEDE !important;
+	border: 1px solid #EED3D7 !important;
+}
+
+ul.parsley-error-list {
+	font-size: 12px;
+	margin-left: -30px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	list-style-type: none;
+}
+
 #chatly-logo-back {
 	display: table;
 	margin: auto;

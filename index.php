@@ -18,8 +18,6 @@
 	<!-- Javascript -->
 	<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
 	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="/js/sha512.js"></script>
-	<script type="text/javascript" src="/js/forms.js"></script>
 </head>
 <body>
 	<!-- Navbar -->

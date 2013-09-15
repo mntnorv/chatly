@@ -13,6 +13,9 @@
 	}
 
 	function login($username, $password, $pdo) {
+		// Hash the password
+		$password = hash('sha512', $password);
+
 		// Select a user with username = $username
 		$stmt = $pdo->prepare("SELECT id, username, password, salt FROM users WHERE username = :username LIMIT 1");
 		$stmt->bindParam(':username', $username, PDO::PARAM_STR);
@@ -58,6 +61,29 @@
 					return false;
 				}
 			}
+		} else {
+			return false;
+		}
+	}
+
+	function register($username, $password, $pdo) {
+		// Hash the password
+		$password = hash('sha512', $password);
+
+		// Salt the password
+		$salt = hash('sha512', uniqid(mt_rand(1, mt_getrandmax()), true));
+		$password_salted = hash('sha512', $password.$salt);
+
+		// Insert a new user
+		$stmt = $pdo->prepare("INSERT INTO users (username, password, salt) VALUES (:username, :password, :salt)");
+		$stmt->bindParam(':username', $username, PDO::PARAM_STR);
+		$stmt->bindParam(':password', $password_salted, PDO::PARAM_STR);
+		$stmt->bindParam(':salt', $salt, PDO::PARAM_STR);
+		$return = $stmt->execute();
+
+		// Return true if registration succeeded, false otherwise.
+		if ($return != FALSE) {
+			return true;
 		} else {
 			return false;
 		}
