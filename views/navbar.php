@@ -1,4 +1,4 @@
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div class="navbar navbar-inverse navbar-static-top">
 	<div class="container">
 		<!-- Navbar header-->
 		<div class="navbar-header">
@@ -15,7 +15,7 @@
 			<?php
 				if(login_check($pdo) == true) {
 					include 'logged_in.php';
-				} else {
+				} else if (basename($_SERVER['REQUEST_URI']) != "login.php") {
 					include 'login_form.php';
 				}
 			?>

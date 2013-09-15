@@ -9,8 +9,8 @@
 		if(login($username, $password, $pdo) == true) {
 			header('Location: /');
 		} else {
-			header('Location: /?error=1');
+			header('Location: /login.php?error=1');
 		}
 	} else {
-		header('Location: /?error=1');
+		header('Location: /login.php?error=1');
 	}
