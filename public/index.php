@@ -23,6 +23,9 @@
 	<!-- Navbar -->
 	<?php include '../views/navbar.php' ?>
 
+	<!-- Messages -->
+	<?php include '../views/messages.php' ?>
+
 	<!-- Hero unit -->
 	<div class="jumbotron">
 		<div class="container">

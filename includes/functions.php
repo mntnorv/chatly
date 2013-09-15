@@ -1,4 +1,9 @@
 <?php
+
+	//================================================================================
+	// Login / registration / session functions
+	//================================================================================
+
 	function secure_session_start() {
 		$session_name = 'chatly_secure_session';
 		$secure = false; // Set to true if using https.
@@ -134,4 +139,26 @@
 		} else {
 			return false;
 		}
+	}
+
+	//================================================================================
+	// Messages
+	//================================================================================
+
+	function set_success_message($message) {
+		set_message($message, 'success');
+	}
+
+	function set_error_message($message) {
+		set_message($message, 'error');
+	}
+
+	function set_notice_message($message) {
+		set_message($message, 'notice');
+	}
+
+	function set_message($message, $type) {
+		$message = preg_replace("/[^a-zA-Z0-9 -!?]+/", "", $message);
+		$_SESSION['message']      = $message;
+		$_SESSION['message_type'] = $type;
 	}
