@@ -12,5 +12,5 @@
 			header('Location: /?error=1');
 		}
 	} else {
-		echo 'Invalid Request';
+		header('Location: /?error=1');
 	}
