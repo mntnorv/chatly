@@ -7,9 +7,9 @@
 		$username = $_POST['username'];
 		$password = $_POST['password_hash'];
 		if(login($username, $password, $pdo) == true) {
-			echo 'Success!';
+			header('Location: /');
 		} else {
-			header('Location: ./?error=1');
+			header('Location: /?error=1');
 		}
 	} else {
 		echo 'Invalid Request';

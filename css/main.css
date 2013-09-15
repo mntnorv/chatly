@@ -1,0 +1,31 @@
+body {
+	padding-top: 50px;
+	padding-bottom: 20px;
+}
+
+#chatly-logo-back {
+	display: table;
+	margin: auto;
+	background: #4098e4;
+
+	-webkit-animation: super-rainbow 30s infinite linear; 
+	   -moz-animation: super-rainbow 30s infinite linear;
+}
+
+@-webkit-keyframes super-rainbow {
+	0%   { background: #d25252; } 
+	20%  { background: #8b52d2; }
+	40%  { background: #528bd2; }
+	60%  { background: #5ed252; }
+	80%  { background: #cdd252; }
+	100% { background: #d25252; }
+}
+
+@-moz-keyframes super-rainbow {
+	0%   { background: #d25252; } 
+	20%  { background: #8b52d2; }
+	40%  { background: #528bd2; }
+	60%  { background: #5ed252; }
+	80%  { background: #cdd252; }
+	100% { background: #d25252; }
+}

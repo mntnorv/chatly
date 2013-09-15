@@ -1,5 +1,5 @@
 <?php
-	include 'functions.php';
+	include_once 'login/functions.php';
 	secure_session_start();
 
 	$_SESSION = array();

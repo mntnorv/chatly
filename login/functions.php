@@ -90,6 +90,7 @@
 			$user_browser = $_SERVER['HTTP_USER_AGENT'];
 
 			$stmt = $pdo->prepare("SELECT password FROM users WHERE id = :user_id LIMIT 1");
+			$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 			$stmt->execute();
 
 			$row = $stmt->fetch();
