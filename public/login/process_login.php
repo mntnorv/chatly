@@ -10,8 +10,10 @@
 			set_success_message('Logged in successfully.');
 			header('Location: /');
 		} else {
-			header('Location: /login.php?error=1');
+			set_error_message('Incorrect username or password.');
+			header('Location: /login.php');
 		}
 	} else {
-		header('Location: /login.php?error=1');
+		set_error_message('<strong>Error:</strong> unable to process login request.');
+		header('Location: /login.php');
 	}

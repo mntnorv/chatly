@@ -23,6 +23,16 @@
 
 <?php if ($message != null) : ?>
 	<div class="alert <?php echo $message_class; ?>">
-		<?php echo $message; ?>
+		<div class="container">
+			<?php echo $message; ?>
+		</div>
 	</div>
+
+	<script type="text/javascript">
+		$(function() {
+			setTimeout(function() {
+				$(".alert").toggle("blind");
+			}, 5000);
+		});
+	</script>
 <?php endif ?>

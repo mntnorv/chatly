@@ -24,6 +24,9 @@
 	<!-- Navbar -->
 	<?php include '../views/navbar.php' ?>
 
+	<!-- Messages -->
+	<?php include '../views/messages.php' ?>
+
 	<div class="container">
 
 		<div class="page-header">

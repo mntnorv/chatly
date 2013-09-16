@@ -158,7 +158,7 @@
 	}
 
 	function set_message($message, $type) {
-		$message = preg_replace("/[^a-zA-Z0-9 -!?]+/", "", $message);
+		$message = preg_replace("/[^a-zA-Z0-9 \.,\-!?]+/", "", $message);
 		$_SESSION['message']      = $message;
 		$_SESSION['message_type'] = $type;
 	}

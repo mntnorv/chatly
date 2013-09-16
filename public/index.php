@@ -16,7 +16,7 @@
 	<link href="/css/main.css" rel="stylesheet" media="screen" />
 
 	<!-- Javascript -->
-	<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
 </head>
 <body>

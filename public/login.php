@@ -4,6 +4,7 @@
 	secure_session_start();
 
 	if(login_check($pdo) == true) {
+		set_notice_message('You are already logged in.');
 		header('Location: ./');
 		die();
 	}
@@ -28,6 +29,9 @@
 <body>
 	<!-- Navbar -->
 	<?php include '../views/navbar.php' ?>
+
+	<!-- Messages -->
+	<?php include '../views/messages.php' ?>
 
 	<div class="container">
 
