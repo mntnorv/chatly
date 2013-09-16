@@ -3,7 +3,9 @@
 	include_once '../includes/functions.php';
 	secure_session_start();
 
-	if(login_check($pdo) == true) {
+	include_once '../includes/login_check.php';
+
+	if($logged_in == true) {
 		set_notice_message('You are already logged in.');
 		header('Location: ./');
 		die();

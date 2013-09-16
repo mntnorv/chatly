@@ -3,7 +3,9 @@
 	include '../../includes/functions.php';
 	secure_session_start();
 
-	if(login_check($pdo) == false) {
+	include_once '../includes/login_check.php';
+
+	if($logged_in == false) {
 		set_error_message('Stop trying to hack me.');
 		header('Location: /');
 		die();

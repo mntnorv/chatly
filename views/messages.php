@@ -32,7 +32,7 @@
 		$(function() {
 			setTimeout(function() {
 				$(".alert").toggle("blind");
-			}, 5000);
+			}, 3000);
 		});
 	</script>
 <?php endif ?>

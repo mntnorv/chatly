@@ -88,8 +88,19 @@
 		$stmt->bindParam(':salt',     $salt,            PDO::PARAM_STR);
 		$return = $stmt->execute();
 
-		// Return true if registration succeeded, false otherwise.
 		if ($return != FALSE) {
+			// Get the new user's id
+			$stmt = $pdo->prepare("SELECT id FROM users WHERE username = :username");
+			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$row = $stmt->fetch();
+			$user_id = $row['id'];
+
+			// Login
+			set_login_session($user_id, $username, $password_salted);
+
+			// Return true (succeeded)
 			return true;
 		} else {
 			return false;
@@ -184,6 +195,7 @@
 			if ($row != FALSE) {
 				$password = $row['password'];
 				$login_check = hash('sha512', $password.$user_browser);
+				
 				// Check if $_SESSION info matches the current session
 				if($login_check == $login_string) {
 					return true;
