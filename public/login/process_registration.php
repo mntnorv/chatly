@@ -31,10 +31,11 @@
 		}
 
 		if(register($username, $password, $pdo) == true) {
+			set_success_message('You have registered successfully. You can now login.');
 			header('Location: ../login.php');
 		} else {
 			set_error_message('This username already exists. Please choose another username.');
-			header('Location: ../register.php?error=1');
+			header('Location: ../register.php');
 		}
 	} else {
 		set_error_message('<strong>Error:</strong> unable to process registration request.');
