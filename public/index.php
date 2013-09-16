@@ -21,10 +21,10 @@
 </head>
 <body>
 	<!-- Navbar -->
-	<?php include '../views/navbar.php' ?>
+	<?php include '../views/navbar.php'; ?>
 
 	<!-- Messages -->
-	<?php include '../views/messages.php' ?>
+	<?php include '../views/messages.php'; ?>
 
 	<!-- Hero unit -->
 	<div class="jumbotron">
@@ -56,7 +56,7 @@
 		</div>
 
 		<!-- Footer -->
-		<?php include '../views/footer.php' ?>
+		<?php include '../views/footer.php'; ?>
 	</div>
 </body>
 </html>

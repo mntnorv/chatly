@@ -1,11 +1,11 @@
 <?php
-	include_once '../includes/db_connect.php';
-	include_once '../includes/functions.php';
+	include_once '../../includes/db_connect.php';
+	include_once '../../includes/functions.php';
 	secure_session_start();
 
-	if(login_check($pdo) == true) {
-		set_notice_message('You are already logged in.');
-		header('Location: ./');
+	if(login_check($pdo) == false) {
+		set_notice_message('Please login.');
+		header('Location: /login.php');
 		die();
 	}
 ?>
@@ -28,34 +28,31 @@
 </head>
 <body>
 	<!-- Navbar -->
-	<?php include '../views/navbar.php'; ?>
+	<?php include '../../views/navbar.php' ?>
 
 	<!-- Messages -->
-	<?php include '../views/messages.php'; ?>
+	<?php include '../../views/messages.php' ?>
 
 	<div class="container">
 
 		<div class="page-header">
-			<h1>Login</h1>
+			<h1>Settings</h1>
 		</div>
 
-		<!-- Grid-->
+		<!-- Registration form -->
 		<div class="row">
-			<!-- Login form-->
-			<div class="col-sm-6">
-				<?php include '../views/login_form.php'; ?>
-			</div>
-
-			<!-- Chatly logo -->
-			<div class="col-sm-6 hidden-xs">
-				<div id="chatly-logo-back">
-					<img class="img-responsive" src="/images/chatly.png" />
+			<div class="col-md-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">Change password</div>
+					<div class="panel-body">
+						<?php include '../../views/change_password_form.php'; ?>
+					</div>
 				</div>
 			</div>
 		</div>
 
 		<!-- Footer -->
-		<?php include '../views/footer.php'; ?>
+		<?php include '../../views/footer.php' ?>
 	</div>	
 </body>
 </html>

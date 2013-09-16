@@ -14,9 +14,9 @@
 		<div class="navbar-collapse collapse">
 			<?php
 				if(login_check($pdo) == true) {
-					include 'logged_in.php';
+					include 'navbar_logged_in.php';
 				} else if (basename($_SERVER['REQUEST_URI']) != "login.php") {
-					include 'login_form.php';
+					include 'navbar_login_form.php';
 				}
 			?>
 		</div>
