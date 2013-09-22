@@ -1,13 +1,12 @@
-body {
-	padding-top: 50px;
-}
-
 .navbar {
 	margin-bottom: 0px;
 }
 
 .alert {
+	position: absolute;
+	width: 100%;
 	margin-bottom: 0px;
+	z-index: 1;
 }
 
 input.parsley-success, textarea.parsley-success {
