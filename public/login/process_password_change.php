@@ -3,7 +3,7 @@
 	include '../../includes/functions.php';
 	secure_session_start();
 
-	include_once '../includes/login_check.php';
+	include '../../includes/login_check.php';
 
 	if($logged_in == false) {
 		set_error_message('Stop trying to hack me.');
