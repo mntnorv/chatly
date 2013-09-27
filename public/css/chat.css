@@ -3,7 +3,7 @@
 /* Small devices (tablets, 768px and up) */
 @media (min-width: 768px) {
 	body, html {
-		height: 100%;
+		min-height: 100%;
 	}
 
 	.fullheight-sm {
@@ -43,9 +43,6 @@
 		bottom: 0;
 		max-height: 100%;
 		overflow: auto;
-
-		padding-bottom: 20px;
-		padding-top: 20px;
 	}
 
 	#chat-input {

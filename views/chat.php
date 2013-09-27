@@ -1,7 +1,7 @@
 <div id="chat-container" class="fullwidth-sm">
 	<div class="container fullheight-sm">
 		<div class="row fullheight-sm">
-			<div class="col-sm-2 fullheight-sm">
+			<div class="col-sm-3 fullheight-sm">
 				<div id="chat-sidebar-container">
 					Content <br />
 					Content <br />
@@ -65,100 +65,70 @@
 					Content <br />
 				</div>
 			</div>
-			<div class="col-sm-10 fullheight-sm">
+			<div class="col-sm-9 fullheight-sm">
 				<div id="chat-window" class="fullwidth-sm fullheight-sm">
 					<div id="chat-log-container" class="fullwidth-sm">
 						<div id="chat-log" class="fullwidth-sm">
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
-							<strong>test_user</strong>: Hey another_test_user! <br />
-							<strong>another_test_user</strong>: Hi back test_user! <br />
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
+							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p class="chat-message"><strong>another_test_user</strong>: Hi back test_user! <span class="pull-right">10:12</span></p>
 						</div>
 					</div>
 
