@@ -1,8 +1,69 @@
 <div id="chat-container" class="fullwidth-sm">
 	<div class="container fullheight-sm">
 		<div class="row fullheight-sm">
-			<div class="col-sm-2">
-				Content
+			<div class="col-sm-2 fullheight-sm">
+				<div id="chat-sidebar-container">
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+					Content <br />
+				</div>
 			</div>
 			<div class="col-sm-10 fullheight-sm">
 				<div id="chat-window" class="fullwidth-sm fullheight-sm">

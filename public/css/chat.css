@@ -20,6 +20,14 @@
 		bottom: 0;
 	}
 
+	#chat-sidebar-container {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		overflow: auto;
+		width: 100%;
+	}
+
 	#chat-window {
 		position: relative;
 	}
