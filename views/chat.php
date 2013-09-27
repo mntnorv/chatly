@@ -110,3 +110,8 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	var chat = new Chat();
+	chat.start();
+</script>
