@@ -2,8 +2,27 @@
 /////////////////////////////////////////////////////////
 // Add-contact-form-specific functions
 $(window).load(function() {
-	$('#add-contact-form').on('shown.bs.collapse', function () {
-		$('#add-contact-form input:first').focus();
+	var addContactForm = $('#add-contact-form');
+	var usernameInput = addContactForm.children('input:first');
+
+	// Focus the input when form shown
+	addContactForm.on('shown.bs.collapse', function () {
+		usernameInput.focus();
+	});
+
+	// Clear input and remove errors when form hidden
+	addContactForm.on('hidden.bs.collapse', function () {
+		usernameInput
+			.val('')
+			.removeClass('parsley-error')
+			.blur();
+
+		addContactForm.children('.parsley-error-list').html('');
+	});
+
+	// Hide the form when input lost focus
+	usernameInput.focusout(function () {
+		addContactForm.collapse('hide');
 	});
 });
 
@@ -12,12 +31,6 @@ function submitAddContact(form) {
 
 	var handleAddContactSuccess = function () {
 		form.collapse('hide');
-		form.children('input:first')
-			.val('')
-			.removeClass('parsley-error')
-			.blur()
-		;
-		form.children('.parsley-error-list').html('');
 	}
 
 	var handleAddContactFailed = function (message) {

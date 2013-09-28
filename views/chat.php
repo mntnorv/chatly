@@ -1,7 +1,7 @@
 <div id="chat-container" class="fullwidth-sm">
 	<div class="container fullheight-sm">
 		<div class="row fullheight-sm">
-			<div class="col-sm-4 fullheight-sm">
+			<div class="col-sm-4 fullheight-sm sidebar-border">
 				<div id="chat-sidebar-container">
 					<div>
 						<a class="sidebar-title" href="#">Chat rooms</a>
