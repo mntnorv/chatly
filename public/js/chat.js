@@ -15,6 +15,7 @@ function submitAddContact(form) {
 		form.children('input:first')
 			.val('')
 			.removeClass('parsley-error')
+			.blur()
 		;
 		form.children('.parsley-error-list').html('');
 	}

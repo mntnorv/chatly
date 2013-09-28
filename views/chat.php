@@ -4,7 +4,7 @@
 			<div class="col-sm-4 fullheight-sm">
 				<div id="chat-sidebar-container">
 					<div>
-						<a class="sidebar-title" data-toggle="collapse" data-target="#chat-rooms" href="#">Chat rooms</a>
+						<a class="sidebar-title" href="#">Chat rooms</a>
 						<a class="btn btn-success btn-xs pull-right" href="#">Create</a>
 					</div>
 					
@@ -13,7 +13,7 @@
 					</div>
 
 					<div>
-						<a class="sidebar-title" data-toggle="collapse" data-target="#contact-list" href="#">Contacts</a>
+						<a class="sidebar-title" href="#">Contacts</a>
 						<a class="btn btn-success btn-xs pull-right" data-toggle="collapse" data-target="#add-contact-form" href="#">Add</a>
 					</div>
 
