@@ -45,7 +45,7 @@
 			<!-- Chatly logo -->
 			<div class="col-sm-6 hidden-xs">
 				<div id="chatly-logo-back">
-					<img class="img-responsive" src="/images/chatly.png" />
+					<img class="img-responsive" src="/images/chatly-transparent.png" />
 				</div>
 			</div>
 		</div>
