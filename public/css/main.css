@@ -9,24 +9,58 @@
 	z-index: 1;
 }
 
-.contact-list a {
+/*
+| Chat sidebar
+*/
+
+.sidebar-title {
+	color: black;
+	font-size: 18px;
+	font-weight: 500;
+	text-decoration: none;
+}
+
+.sidebar-title:hover {
+	color: black;
+	text-decoration: none;
+}
+
+.sidebar-title:visited {
+	color: black;
+	text-decoration: none;
+}
+
+.sidebar-list a.item {
+	overflow: hidden;
 	color: inherit;
 	display: block;
 	text-decoration: none;
 }
 
-.contact-list a:hover {
+.sidebar-list a.item:hover {
 	color: inherit;
 	background-color: #eee;
 }
 
+/*
+| Contact status
+*/
+
 .status-online {
-	color: #468847;
+	color: #5EB85C;
 }
 
 .status-offline {
 	color: #aaa;
 }
+
+.status-unknown {
+	color: #F0AD4E;
+}
+
+/*
+| Parsley (form validation)
+*/
 
 input.parsley-success, textarea.parsley-success {
 	color: #468847 !important;
@@ -47,6 +81,10 @@ ul.parsley-error-list {
 	margin-bottom: 5px;
 	list-style-type: none;
 }
+
+/*
+| Chatly logo
+*/
 
 #chatly-logo-back {
 	display: table;

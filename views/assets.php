@@ -9,4 +9,4 @@
 <script type="text/javascript" src="/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/js/parsley.min.js"></script>
 <script type="text/javascript" src="/js/asevented.min.js"></script>
-<script type="text/javascript" src="/js/chat.js"></script>
+<script type="text/javascript" src="/js/chat-backend.js"></script>

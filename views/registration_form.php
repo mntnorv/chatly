@@ -2,7 +2,7 @@
 	<div class="form-group">
 		<label for="input_username" class="col-md-4 control-label">Username</label>
 		<div class="col-md-8">
-			<input type="text" name="username" class="form-control" id="input_username" placeholder="Username" data-required="true" data-minlength="4" data-remote="login/check_username.php" data-remote-method="POST" />
+			<input type="text" name="username" class="form-control" id="input_username" placeholder="Username" data-required="true" data-minlength="4" data-regexp="^[a-z][a-z0-9]*$" data-regexp-flag="i" data-regexp-message="Username can contain only letters and numbers, and must start with a letter." data-remote="ajax/check_username_available.php" data-remote-method="POST" />
 		</div>
 	</div>
 	<div class="form-group">

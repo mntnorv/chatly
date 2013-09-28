@@ -13,9 +13,9 @@
 		$row = $stmt->fetch();
 
 		if ($row == FALSE) {
-			$response['success'] = "This is a unique username.";
+			$response['success'] = true;
 		} else {
-			$response['error'] = "This username already exists.";
+			$response['error'] = "This username is not availabe.";
 		}
 	} else {
 		$response['error'] = "Unable to check username availability.";

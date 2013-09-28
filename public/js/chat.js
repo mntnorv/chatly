@@ -1,69 +1,124 @@
 
-// Chat constructor
-function Chat(opts) {
-	// Define options as an empty object if opts is null
-	var options = opts || {};
+/////////////////////////////////////////////////////////
+// Add-contact-form-specific functions
+$(window).load(function() {
+	$('#add-contact-form').on('shown.bs.collapse', function () {
+		$('#add-contact-form input:first').focus();
+	});
+});
 
-	// Default configuration
-	var config = this.config = {
+function submitAddContact(form) {
+	var newContactUsername = form.children('input:first').val();
 
-	};
-
-	// Set config from options
-	for (item in options) {
-		this.config[item] = options[item];
+	var handleAddContactSuccess = function () {
+		form.collapse('hide');
+		form.children('input:first')
+			.val('')
+			.removeClass('parsley-error')
+		;
+		form.children('.parsley-error-list').html('');
 	}
 
-	// Firebase connection reference
-	this.connectedRef = new Firebase("https://chatly.firebaseio.com/.info/connected");
+	var handleAddContactFailed = function (message) {
+		form.children('input:first').addClass('parsley-error');
+		form.children('.parsley-error-list')
+			.html($('<li></li>')
+				.append(document.createTextNode(message))
+			)
+		;
+	}
 
-	// Set callbacks
-	this.on('gotUsername', this.handleGotUsername.bind(this));
+	chat.sendFriendRequest(
+		newContactUsername,
+		handleAddContactSuccess,
+		handleAddContactFailed
+	);
 }
 
-// Add event functionality to WebRTC
-asEvented.call(Chat.prototype);
+/////////////////////////////////////////////////////////
+// Chat
 
-// Starts the chat
-Chat.prototype.start = function() {
-	this.getUsername();
-};
+// Create a chat object
+var chat = new Chat();
+chat.start();
 
-// Get the username
-Chat.prototype.getUsername = function() {
-	var self = this;
-	$.ajax("/user/getusername.php")
-		.done(function (response) {
-			if (response.username !== null) {
-				self.trigger("gotUsername", response.username);
-			}
-		})
-		.fail(function() {
-			alert("Error: unable to get your username.");
+// Set chat callbacks
+chat.on('contactAdded', handleContactAdded);
+
+/////////////////////////////////////////////////////////
+// Chat callback handlers
+
+function handleContactAdded(newContact) {
+	// Create a new contact element
+	var contactStatus = $('<span class="glyphicon glyphicon-question-sign status-offline"></span>');
+	
+	var contactElem = $('<a class="item" href="#"></a>')
+		.append(contactStatus)
+		.append(document.createTextNode(" " + newContact.username))
+	;
+
+	var confirmElements = $('<span class="pull-right"></span>')
+		.append($('<a href="#">Confirm</a>')
+			.attr({onclick: 'chat.confirmFriendRequest("' + newContact.username + '");'})
+		)
+		.append(document.createTextNode('/'))
+		.append($('<a href="#">Decline</a>')
+			.attr({onclick: 'chat.removeContact("' + newContact.username + '");'})
+		)
+	;
+
+	// Handle contact state change
+	var handleStateChange = function (loggedIn, confirmed) {
+		handleContactStateChanged({
+			loggedIn: loggedIn,
+			confirmed: confirmed,
+			statusElem: contactStatus,
+			confirmElem: confirmElements,
+			contactElem: contactElem
 		});
-};
+	};
 
+	// Handle contact removal
+	var handleContactRemoved = function () {
+		contactElem.remove();
+	};
 
-// Connect to the chat server
-Chat.prototype.connect = function(username) {
-	var self = this;
+	// Add new contact element to HTML
+	$('#contact-list').append(contactElem);
 
-	this.userRef = new Firebase("https://chatly.firebaseio.com/users/" + username);
+	// Set contact event handlers
+	newContact.on('stateChanged', handleStateChange);
+	newContact.on('removed', handleContactRemoved);
 
-	this.connectedRef.on('value', function(snapshot) {
-		if (snapshot.val() === true) {
-			console.log("Connected to Firebase...");
-
-			// On disconnect
-			self.userRef.child('loggedIn').set(null);
-
-			// Join room
-			self.userRef.child('loggedIn').set(true);
-		}
+	// Set first state
+	handleContactStateChanged({
+		loggedIn: newContact.isLoggedIn,
+		confirmed: newContact.confirmationState,
+		statusElem: contactStatus,
+		confirmElem: confirmElements,
+		contactElem: contactElem
 	});
-};
+}
 
-// Event handlers
-Chat.prototype.handleGotUsername = function(username) {
-	this.connect(username);
-};
+function handleContactStateChanged(opts) {
+	var statusElem  = opts.statusElem;
+	var confirmElem = opts.confirmElem;
+	var contactElem = opts.contactElem;
+	var loggedIn = opts.loggedIn;
+	var confirmed = opts.confirmed;
+
+	if (confirmed === true) {
+		confirmElem.remove();
+		if (loggedIn) {
+			statusElem.attr({class: "glyphicon glyphicon-ok-sign status-online"});
+		} else {
+			statusElem.attr({class: "glyphicon glyphicon-minus-sign status-offline"});
+		}
+	} else if (confirmed === false) {
+		statusElem.attr({class: "glyphicon glyphicon-question-sign status-unknown"});
+		contactElem.append(confirmElem);
+	} else if (confirmed === "sent") {
+		confirmElem.remove();
+		statusElem.attr({class: "glyphicon glyphicon-question-sign status-offline"});
+	}
+}
