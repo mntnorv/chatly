@@ -42,11 +42,27 @@
 
 	border-radius: 4px;
 	padding: 2px;
+
+	word-wrap: break-word;
 }
 
 .sidebar-list a.item:hover {
 	color: inherit;
 	background-color: #f5f5f5;
+}
+
+/*
+| Chat message styles
+*/
+
+.chat-message {
+	word-wrap: break-word;
+	margin-right: 60px;
+}
+
+.chat-message-time {
+	color: #888;
+	width: 50px;
 }
 
 /*

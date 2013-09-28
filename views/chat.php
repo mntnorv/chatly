@@ -31,7 +31,23 @@
 				<div id="chat-window" class="fullwidth-sm fullheight-sm">
 					<div id="chat-log-container" class="fullwidth-sm">
 						<div id="chat-log" class="fullwidth-sm">
-							<p class="chat-message"><strong>test_user</strong>: Hey another_test_user! <span class="pull-right">10:11</span></p>
+							<p><strong>test_user</strong></p>
+							<div>
+								<p class="chat-message-time pull-right">10:11</p>
+								<p class="chat-message">Hey another_test_user!</p>
+							</div>
+
+							<div>
+								<p class="chat-message-time pull-right">10:11</p>
+								<p class="chat-message">Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user!</p>
+							</div>
+							
+							<p><strong>another_test_user</strong></p>
+
+							<div>
+								<p class="chat-message-time pull-right">10:11</p>
+								<p class="chat-message">WHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAT?</p>
+							</div>
 						</div>
 					</div>
 
