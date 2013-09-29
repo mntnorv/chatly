@@ -25,7 +25,7 @@
 
 	/////////////////////////////////////////////////////////
 	// URL hash change handling
-	window.onhashchange = function () {
+	var handleHashChange = function () {
 		if (window.location.hash) {
 			var hashParts = window.location.hash.split('/');
 			switch(hashParts[0]) {
@@ -40,6 +40,7 @@
 		}
 	}
 
+	window.onhashchange = handleHashChange;
 	handleHashChange();
 
 	/////////////////////////////////////////////////////////
