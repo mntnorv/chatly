@@ -25,15 +25,21 @@
 
 	/////////////////////////////////////////////////////////
 	// URL hash change handling
+	function getDeparamedHash() {
+		return $.deparam(window.location.hash.substring(1));
+	}
+
 	var handleHashChange = function () {
+		$('#contact-list > .active')
+			.removeClass('active');
+
 		if (window.location.hash) {
-			var hashParts = window.location.hash.split('/');
-			switch(hashParts[0]) {
-				case '#room':
-					if (hashParts[1]) {
-						chat.joinRoom(hashParts[1]);
-					}
-					break;
+			var hashObject = getDeparamedHash();
+
+			if (hashObject.room) {
+				chat.joinRoom(hashObject.room);
+				$('#contact-list > [data-room="' + hashObject.room + '"]')
+					.addClass('active');
 			}
 		} else {
 			chat.leaveCurrentRoom();
@@ -131,6 +137,11 @@
 			)
 		;
 
+		var currentRoom = getDeparamedHash().room;
+		if (newContact.confirmationState === currentRoom) {
+			contactElem.addClass('active');
+		}
+
 		// Handle contact state change
 		var handleStateChange = function (loggedIn, confirmed) {
 			handleContactStateChanged({
@@ -180,7 +191,11 @@
 			contactElem.append(confirmElem);
 		} else if (confirmed) {
 			confirmElem.remove();
-			contactElem.attr({href: '#room/' + confirmed});
+			contactElem.attr({
+				href       : '#' + $.param({room: confirmed}),
+				'data-room': confirmed
+			});
+
 			if (loggedIn) {
 				statusElem.attr({class: "glyphicon glyphicon-ok-sign status-online"});
 			} else {

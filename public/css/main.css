@@ -41,7 +41,7 @@
 	text-decoration: none;
 
 	border-radius: 4px;
-	padding: 2px;
+	padding: 2px 4px 2px 4px;
 
 	word-wrap: break-word;
 }
@@ -49,6 +49,15 @@
 .sidebar-list a.item:hover {
 	color: inherit;
 	background-color: #f5f5f5;
+}
+
+.sidebar-list a.item.active {
+	color: #eee;
+	background-color: #428BCA;
+}
+
+.sidebar-list a.item.active:hover {
+	background-color: #3276B1;
 }
 
 /*
@@ -78,12 +87,24 @@
 	color: #5EB85C;
 }
 
+.active > .status-online {
+	color: #fff;
+}
+
 .status-offline {
 	color: #aaa;
 }
 
+.active > .status-offline {
+	color: #fff;
+}
+
 .status-unknown {
 	color: #F0AD4E;
+}
+
+.active > .status-unknown {
+	color: #fff;
 }
 
 /*
