@@ -9,6 +9,7 @@ function Chat(opts) {
 
 	// Default configuration
 	var config = this.config = {
+		firebaseUrl: "https://chatly.firebaseio.com"
 	};
 
 	// Set config from options
@@ -20,7 +21,7 @@ function Chat(opts) {
 	this.contacts = {};
 
 	// Firebase connection reference
-	this.connectedRef = new Firebase(Chat.getFirebaseUrl() + "/.info/connected");
+	this.connectedRef = new Firebase(this.config.firebaseUrl + "/.info/connected");
 
 	// Set callbacks
 	this.on('gotUsername', this.handleGotUsername.bind(this));
@@ -28,11 +29,6 @@ function Chat(opts) {
 
 // Add event functionality to Chat
 asEvented.call(Chat.prototype);
-
-// Get the Firebase URL
-Chat.getFirebaseUrl = function() {
-	return "https://chatly.firebaseio.com";
-}
 
 /////////////////////////////////////////////////////////
 // Chat prototype methods
@@ -60,7 +56,7 @@ Chat.prototype.getUsername = function() {
 Chat.prototype.connect = function(username) {
 	var self = this;
 
-	this.userRef = new Firebase(Chat.getFirebaseUrl() + "/users/" + username);
+	this.userRef = new Firebase(this.config.firebaseUrl + "/users/" + username);
 
 	this.connectedRef.on('value', function(snapshot) {
 		if (snapshot.val() === true) {
@@ -116,7 +112,7 @@ Chat.prototype.confirmFriendRequest = function(username) {
 		})
 	;
 
-	new Firebase(Chat.getFirebaseUrl() + "/users/" + username + "/contacts/" + this.username)
+	new Firebase(this.config.firebaseUrl + "/users/" + username + "/contacts/" + this.username)
 		.transaction(function (current_value) {
 			if (current_value == "sent") {
 				return true;
@@ -135,7 +131,7 @@ Chat.prototype.removeContact = function(username) {
 		.set(null)
 	;
 
-	new Firebase(Chat.getFirebaseUrl() + "/users/" + username + "/contacts/" + this.username)
+	new Firebase(this.config.firebaseUrl + "/users/" + username + "/contacts/" + this.username)
 		.set(null)
 	;
 };
@@ -144,7 +140,7 @@ Chat.prototype.removeContact = function(username) {
 Chat.prototype.joinRoom = function(roomName) {
 	this.leaveCurrentRoom();
 
-	this.roomRef = new Firebase(Chat.getFirebaseUrl() + "/rooms/" + roomName);
+	this.roomRef = new Firebase(this.config.firebaseUrl + "/rooms/" + roomName);
 	this.roomRef.on('child_added', function (snapshot) {
 		this.trigger('gotChatMessage', snapshot.val());
 	});
@@ -203,7 +199,7 @@ Chat.prototype.handleSendFriendRequest = function(username) {
 		})
 	;
 
-	new Firebase(Chat.getFirebaseUrl() + "/users/" + username + "/contacts/" + this.username)
+	new Firebase(this.config.firebaseUrl + "/users/" + username + "/contacts/" + this.username)
 		.transaction(function (current_value) {
 			if (current_value === null  || current_value === undefined) {
 				return false;
@@ -232,7 +228,7 @@ function Contact(opts) {
 	this.contactRef = opts.contactRef;
 	this.contactRef.on('value', this.handleConfirmationStateChange.bind(this));
 
-	this.connectionRef = new Firebase(Chat.getFirebaseUrl() + "/users/" + this.username + "/loggedIn");
+	this.connectionRef = new Firebase(this.parent.config.firebaseUrl + "/users/" + this.username + "/loggedIn");
 	this.connectionRef.on('value', this.handleLoginStateChange.bind(this));
 }
 
