@@ -4,8 +4,8 @@
 			<div class="col-sm-4 fullheight-sm sidebar-border">
 				<div id="chat-sidebar-container">
 					<div>
-						<a class="sidebar-title" href="#">Chat rooms</a>
-						<a class="btn btn-success btn-xs pull-right" href="#">Create</a>
+						<span class="sidebar-title">Chat rooms</span>
+						<button class="btn btn-success btn-xs pull-right">Create</button>
 					</div>
 					
 					<div id="chat-rooms" class="sidebar-list in">
@@ -13,8 +13,8 @@
 					</div>
 
 					<div>
-						<a class="sidebar-title" href="#">Contacts</a>
-						<a class="btn btn-success btn-xs pull-right" data-toggle="collapse" data-target="#add-contact-form" href="#">Add</a>
+						<span class="sidebar-title">Contacts</span>
+						<button class="btn btn-success btn-xs pull-right" data-toggle="collapse" data-target="#add-contact-form">Add</button>
 					</div>
 
 					<form id="add-contact-form" class="collapse" onsubmit="chatly.submitAddContact($(this)); return false;">
@@ -31,22 +31,6 @@
 				<div id="chat-window" class="fullwidth-sm fullheight-sm">
 					<div id="chat-log-container" class="fullwidth-sm">
 						<div id="chat-log" class="fullwidth-sm">
-							<p class="chat-log-username">test_user</p>
-							<div>
-								<p class="chat-message-time pull-right">10:11</p>
-								<p class="chat-message-text">Hey another_test_user!</p>
-							</div>
-
-							<div>
-								<p class="chat-message-time pull-right">10:11</p>
-								<p class="chat-message-text">Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user!</p>
-							</div>
-							
-							<p class="chat-log-username">another_test_user</p>
-							<div>
-								<p class="chat-message-time pull-right">10:11</p>
-								<p class="chat-message-text">WHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAT?</p>
-							</div>
 						</div>
 					</div>
 

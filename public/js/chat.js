@@ -15,11 +15,32 @@
 	// Start the chat engine!
 	chat.start();
 
+	// The last message in the room was sent by this user
+	var lastUsername;
+
 	/////////////////////////////////////////////////////////
 	// Chat method proxies
-	chatly.joinRoom       = chat.joinRoom.bind(chat);
 	chatly.confirmRequest = chat.confirmFriendRequest.bind(chat);
 	chatly.removeContact  = chat.removeContact.bind(chat);
+
+	/////////////////////////////////////////////////////////
+	// URL hash change handling
+	window.onhashchange = function () {
+		if (window.location.hash) {
+			var hashParts = window.location.hash.split('/');
+			switch(hashParts[0]) {
+				case '#room':
+					if (hashParts[1]) {
+						chat.joinRoom(hashParts[1]);
+					}
+					break;
+			}
+		} else {
+			chat.leaveCurrentRoom();
+		}
+	}
+
+	handleHashChange();
 
 	/////////////////////////////////////////////////////////
 	// Add-contact-form-specific functions
@@ -90,22 +111,19 @@
 		// Create a new contact element
 		var contactStatus = $('<span class="glyphicon glyphicon-question-sign status-offline"></span>');
 		
-		var contactElem = $('<a class="item" href="#"></a>')
+		var contactElem = $('<a class="item"></a>')
 			.append(contactStatus)
 			.append(document.createTextNode(" " + newContact.username))
-			.attr({
-				onclick: 'chatly.joinRoom("' + newContact.roomName + '");'
-			})
 		;
 
 		var confirmElements = $('<span class="pull-right"></span>')
-			.append($('<a href="#">Confirm</a>')
+			.append($('<a>Confirm</a>')
 				.attr({
-					onclick: 'chatly.confirmFriendRequest("' + newContact.username + '");'
+					onclick: 'chatly.confirmRequest("' + newContact.username + '");'
 				})
 			)
 			.append(document.createTextNode('/'))
-			.append($('<a href="#">Decline</a>')
+			.append($('<a>Decline</a>')
 				.attr({
 					onclick: 'chatly.removeContact("' + newContact.username + '");'
 				})
@@ -150,22 +168,23 @@
 		var statusElem  = opts.statusElem;
 		var confirmElem = opts.confirmElem;
 		var contactElem = opts.contactElem;
-		var loggedIn = opts.loggedIn;
-		var confirmed = opts.confirmed;
+		var loggedIn    = opts.loggedIn;
+		var confirmed   = opts.confirmed;
 
-		if (confirmed === true) {
+		if (confirmed === "sent") {
 			confirmElem.remove();
+			statusElem.attr({class: "glyphicon glyphicon-question-sign status-offline"});
+		} else if (confirmed === false) {
+			statusElem.attr({class: "glyphicon glyphicon-question-sign status-unknown"});
+			contactElem.append(confirmElem);
+		} else if (confirmed) {
+			confirmElem.remove();
+			contactElem.attr({href: '#room/' + confirmed});
 			if (loggedIn) {
 				statusElem.attr({class: "glyphicon glyphicon-ok-sign status-online"});
 			} else {
 				statusElem.attr({class: "glyphicon glyphicon-minus-sign status-offline"});
 			}
-		} else if (confirmed === false) {
-			statusElem.attr({class: "glyphicon glyphicon-question-sign status-unknown"});
-			contactElem.append(confirmElem);
-		} else if (confirmed === "sent") {
-			confirmElem.remove();
-			statusElem.attr({class: "glyphicon glyphicon-question-sign status-offline"});
 		}
 	}
 
@@ -177,9 +196,8 @@
 		// Append the sender's username to the chat log if there were no chat
 		// messages before or the last message was from another user
 		var appendUsername = false;
-		var lastUsername = chatLog.find('.chat-log-username:last');
-		if (lastUsername.length > 0) {
-			if (lastUsername.attr('data-username') !== message.from) {
+		if (lastUsername) {
+			if (lastUsername !== message.from) {
 				appendUsername = true;
 			}
 		} else {
@@ -187,6 +205,8 @@
 		}
 
 		if (appendUsername) {
+			lastUsername = message.from;
+
 			// Create the username element
 			var usernameElem = $('<p class="chat-log-username"></p>')
 				.attr({'data-username': message.from})
@@ -198,7 +218,7 @@
 
 		// Create the message element
 		var timeElem = $('<p class="chat-message-time pull-right"></p>')
-			.append(document.createTextNode(new Date(message.time).format('h:i')));
+			.append(document.createTextNode(new Date(message.time).format('H:i')));
 
 		var messageElem = $('<p class="chat-message-text"></p>')
 			.append(document.createTextNode(message.data));
@@ -214,6 +234,7 @@
 	// Clear all messages from the chat log
 	function handleLeftRoom() {
 		$('#chat-log').html('');
+		lastUsername = null;
 	}
 
 }(window.chatly = window.chatly || {}, jQuery));

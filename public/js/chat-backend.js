@@ -100,12 +100,14 @@ Chat.prototype.sendFriendRequest = function(username, success, failure) {
 
 // Confirm a friend request
 Chat.prototype.confirmFriendRequest = function(username) {
+	var roomName = new Firebase(this.config.firebaseUrl + "/rooms").push().name();
+
 	this.userRef
 		.child('contacts')
 		.child(username)
 		.transaction(function (current_value) {
 			if (current_value === false) {
-				return true;
+				return roomName;
 			} else {
 				return current_value;
 			}
@@ -115,7 +117,7 @@ Chat.prototype.confirmFriendRequest = function(username) {
 	new Firebase(this.config.firebaseUrl + "/users/" + username + "/contacts/" + this.username)
 		.transaction(function (current_value) {
 			if (current_value == "sent") {
-				return true;
+				return roomName;
 			} else {
 				return current_value;
 			}
@@ -232,11 +234,6 @@ function Contact(opts) {
 	this.parent = opts.parent;
 
 	this.loggedIn = false;
-
-	// Generate a unique room name known to both of the contacts
-	this.roomName = (this.username < this.parent.username) ?
-		this.username + "-" + this.parent.username :
-		this.parent.username + "-" + this.username;
 
 	this.contactRef = opts.contactRef;
 	this.contactRef.on('value', this.handleConfirmationStateChange.bind(this));
