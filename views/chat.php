@@ -17,7 +17,7 @@
 						<a class="btn btn-success btn-xs pull-right" data-toggle="collapse" data-target="#add-contact-form" href="#">Add</a>
 					</div>
 
-					<form id="add-contact-form" class="collapse" onsubmit="submitAddContact($(this)); return false;">
+					<form id="add-contact-form" class="collapse" onsubmit="chatly.submitAddContact($(this)); return false;">
 						<input class="form-control" name="username" type="text" placeholder="username" autocomplete="off"></input>
 						<ul class="parsley-error-list">
 						</ul>
