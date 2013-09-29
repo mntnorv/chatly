@@ -1,6 +1,4 @@
 
-var chatlyRef = new Firebase("https://chatly.firebaseio.com/");
-
 /////////////////////////////////////////////////////////
 // Chat
 
@@ -22,7 +20,7 @@ function Chat(opts) {
 	this.contacts = {};
 
 	// Firebase connection reference
-	this.connectedRef = chatlyRef.child(".info/connected");
+	this.connectedRef = new Firebase(Chat.getFirebaseUrl() + "/.info/connected");
 
 	// Set callbacks
 	this.on('gotUsername', this.handleGotUsername.bind(this));
@@ -31,8 +29,13 @@ function Chat(opts) {
 // Add event functionality to Chat
 asEvented.call(Chat.prototype);
 
+// Get the Firebase URL
+Chat.getFirebaseUrl = function() {
+	return "https://chatly.firebaseio.com";
+}
+
 /////////////////////////////////////////////////////////
-// Chat methods
+// Chat prototype methods
 
 // Starts the chat
 Chat.prototype.start = function() {
@@ -44,7 +47,7 @@ Chat.prototype.getUsername = function() {
 	var self = this;
 	$.ajax("/user/getusername.php")
 		.done(function (response) {
-			if (response.username !== null) {
+			if (response.username) {
 				self.trigger("gotUsername", response.username);
 			}
 		})
@@ -57,7 +60,7 @@ Chat.prototype.getUsername = function() {
 Chat.prototype.connect = function(username) {
 	var self = this;
 
-	this.userRef = chatlyRef.child("users").child(username);
+	this.userRef = new Firebase(Chat.getFirebaseUrl() + "/users/" + username);
 
 	this.connectedRef.on('value', function(snapshot) {
 		if (snapshot.val() === true) {
@@ -82,11 +85,11 @@ Chat.prototype.sendFriendRequest = function(username, success, failure) {
 		if (data.success === true) {
 			this.handleSendFriendRequest(username);
 			
-			if (success !== null) {
+			if (success) {
 				success();
 			}
 		} else {
-			if (failure !== null) {
+			if (failure) {
 				failure(data.error);
 			}
 		}
@@ -113,11 +116,7 @@ Chat.prototype.confirmFriendRequest = function(username) {
 		})
 	;
 
-	chatlyRef
-		.child('users')
-		.child(username)
-		.child('contacts')
-		.child(this.username)
+	new Firebase(Chat.getFirebaseUrl() + "/users/" + username + "/contacts/" + this.username)
 		.transaction(function (current_value) {
 			if (current_value == "sent") {
 				return true;
@@ -136,13 +135,31 @@ Chat.prototype.removeContact = function(username) {
 		.set(null)
 	;
 
-	chatlyRef
-		.child('users')
-		.child(username)
-		.child('contacts')
-		.child(this.username)
+	new Firebase(Chat.getFirebaseUrl() + "/users/" + username + "/contacts/" + this.username)
 		.set(null)
 	;
+};
+
+// Join a chat room
+Chat.prototype.joinRoom = function(roomName) {
+	this.leaveCurrentRoom();
+
+	this.roomRef = new Firebase(Chat.getFirebaseUrl() + "/rooms/" + roomName);
+	this.roomRef.on('child_added', function (snapshot) {
+		this.trigger('gotChatMessage', snapshot.val());
+	});
+
+	this.trigger('joinedRoom', roomName);
+};
+
+// Leave current chat room if a room is joined
+Chat.prototype.leaveCurrentRoom = function() {
+	if (this.roomRef) {
+		this.roomRef.off();
+		this.roomRef = null;
+	}
+
+	this.trigger('leftRoom');
 };
 
 /////////////////////////////////////////////////////////
@@ -156,6 +173,7 @@ Chat.prototype.handleGotUsername = function(username) {
 
 Chat.prototype.handleContactAdded = function(snapshot) {
 	var newContact = new Contact({
+		parent: this,
 		username: snapshot.name(),
 		contactRef: snapshot.ref()
 	});
@@ -168,6 +186,7 @@ Chat.prototype.handleContactAdded = function(snapshot) {
 Chat.prototype.handleContactRemoved = function(snapshot) {
 	var contact = this.contacts[snapshot.name()];
 	delete this.contacts[snapshot.name()];
+	contact.stop();
 	contact.trigger('removed');
 };
 
@@ -176,7 +195,7 @@ Chat.prototype.handleSendFriendRequest = function(username) {
 		.child('contacts')
 		.child(username)
 		.transaction(function (current_value) {
-			if (current_value === null) {
+			if (current_value === null || current_value === undefined) {
 				return "sent";
 			} else {
 				return current_value;
@@ -184,14 +203,9 @@ Chat.prototype.handleSendFriendRequest = function(username) {
 		})
 	;
 
-	chatlyRef
-		.child('users')
-		.child(username)
-		.child('contacts')
-		.child(this.username)
+	new Firebase(Chat.getFirebaseUrl() + "/users/" + username + "/contacts/" + this.username)
 		.transaction(function (current_value) {
-			console.log(current_value);
-			if (current_value === null) {
+			if (current_value === null  || current_value === undefined) {
 				return false;
 			} else {
 				return current_value;
@@ -206,18 +220,34 @@ Chat.prototype.handleSendFriendRequest = function(username) {
 // Contact constructor
 function Contact(opts) {
 	this.username = opts.username;
+	this.parent = opts.parent;
 
 	this.loggedIn = false;
+
+	// Generate a unique room name known to both of the contacts
+	this.roomName = (this.username < this.parent.username) ?
+		this.username + "-" + this.parent.username :
+		this.parent.username + "-" + this.username;
 
 	this.contactRef = opts.contactRef;
 	this.contactRef.on('value', this.handleConfirmationStateChange.bind(this));
 
-	this.connectionRef = chatlyRef.child('users').child(this.username).child('loggedIn');
+	this.connectionRef = new Firebase(Chat.getFirebaseUrl() + "/users/" + this.username + "/loggedIn");
 	this.connectionRef.on('value', this.handleLoginStateChange.bind(this));
 }
 
 // Add event functionality to Contact
 asEvented.call(Contact.prototype);
+
+/////////////////////////////////////////////////////////
+// Contact methods
+
+Contact.prototype.stop = function() {
+	this.contactRef.off();
+	this.connectionRef.off();
+	this.contactRef = null;
+	this.connectionRef = null;
+};
 
 /////////////////////////////////////////////////////////
 // Contact event handlers

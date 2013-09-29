@@ -54,14 +54,18 @@ function submitAddContact(form) {
 
 // Create a chat object
 var chat = new Chat();
-chat.start();
 
 // Set chat callbacks
 chat.on('contactAdded', handleContactAdded);
+chat.on('leftRoom',     handleLeftRoom);
+
+// Start the chat engine!
+chat.start();
 
 /////////////////////////////////////////////////////////
 // Chat callback handlers
 
+// Add a new contact to the HTML
 function handleContactAdded(newContact) {
 	// Create a new contact element
 	var contactStatus = $('<span class="glyphicon glyphicon-question-sign status-offline"></span>');
@@ -69,15 +73,22 @@ function handleContactAdded(newContact) {
 	var contactElem = $('<a class="item" href="#"></a>')
 		.append(contactStatus)
 		.append(document.createTextNode(" " + newContact.username))
+		.attr({
+			onclick: 'chat.joinRoom("' + newContact.roomName + '");'
+		})
 	;
 
 	var confirmElements = $('<span class="pull-right"></span>')
 		.append($('<a href="#">Confirm</a>')
-			.attr({onclick: 'chat.confirmFriendRequest("' + newContact.username + '");'})
+			.attr({
+				onclick: 'chat.confirmFriendRequest("' + newContact.username + '");'
+			})
 		)
 		.append(document.createTextNode('/'))
 		.append($('<a href="#">Decline</a>')
-			.attr({onclick: 'chat.removeContact("' + newContact.username + '");'})
+			.attr({
+				onclick: 'chat.removeContact("' + newContact.username + '");'
+			})
 		)
 	;
 
@@ -114,6 +125,7 @@ function handleContactAdded(newContact) {
 	});
 }
 
+// Change the contact's appearance on a state change
 function handleContactStateChanged(opts) {
 	var statusElem  = opts.statusElem;
 	var confirmElem = opts.confirmElem;
@@ -135,4 +147,9 @@ function handleContactStateChanged(opts) {
 		confirmElem.remove();
 		statusElem.attr({class: "glyphicon glyphicon-question-sign status-offline"});
 	}
+}
+
+// Clear all messages from the chat log
+function handleLeftRoom() {
+	$('#chat-log').html('');
 }
