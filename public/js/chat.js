@@ -8,8 +8,9 @@
 	var chat = new Chat();
 
 	// Set chat callbacks
-	chat.on('contactAdded', handleContactAdded);
-	chat.on('leftRoom',     handleLeftRoom);
+	chat.on('contactAdded',   handleContactAdded);
+	chat.on('leftRoom',       handleLeftRoom);
+	chat.on('gotChatMessage', handleChatMessage);
 
 	// Start the chat engine!
 	chat.start();
@@ -25,7 +26,7 @@
 
 	$(window).load(function() {
 		var addContactForm = $('#add-contact-form');
-		var usernameInput = addContactForm.children('input:first');
+		var usernameInput = addContactForm.children('[name="username"]');
 
 		// Focus the input when form shown
 		addContactForm.on('shown.bs.collapse', function () {
@@ -50,14 +51,14 @@
 
 	// Submit the add contact form
 	chatly.submitAddContact = function (form) {
-		var newContactUsername = form.children('input:first').val();
+		var newContactUsername = form.children('[name="username"]').val();
 
 		var handleAddContactSuccess = function () {
 			form.collapse('hide');
 		}
 
 		var handleAddContactFailed = function (message) {
-			form.children('input:first').addClass('parsley-error');
+			form.children('[name="username"]').addClass('parsley-error');
 			form.children('.parsley-error-list')
 				.html($('<li></li>')
 					.append(document.createTextNode(message))
@@ -70,7 +71,16 @@
 			handleAddContactSuccess,
 			handleAddContactFailed
 		);
-	}
+	};
+
+	/////////////////////////////////////////////////////////
+	// Chat input specific functions
+	chatly.submitChatMessage = function (form) {
+		var inputElem = form.find('[name="message"]');
+		var message = inputElem.val();
+		inputElem.val('');
+		chat.sendToRoom(message);
+	};
 
 	/////////////////////////////////////////////////////////
 	// Chat callback handlers
@@ -157,6 +167,48 @@
 			confirmElem.remove();
 			statusElem.attr({class: "glyphicon glyphicon-question-sign status-offline"});
 		}
+	}
+
+	// Add a new chat message to HTML
+	function handleChatMessage(message) {
+		// Get chat log container
+		var chatLog = $('#chat-log');
+
+		// Append the sender's username to the chat log if there were no chat
+		// messages before or the last message was from another user
+		var appendUsername = false;
+		var lastUsername = chatLog.find('.chat-log-username:last');
+		if (lastUsername.length > 0) {
+			if (lastUsername.attr('data-username') !== message.from) {
+				appendUsername = true;
+			}
+		} else {
+			appendUsername = true;
+		}
+
+		if (appendUsername) {
+			// Create the username element
+			var usernameElem = $('<p class="chat-log-username"></p>')
+				.attr({'data-username': message.from})
+				.append(document.createTextNode(message.from));
+
+			// Append the username element to the chat log
+			chatLog.append(usernameElem);
+		}
+
+		// Create the message element
+		var timeElem = $('<p class="chat-message-time pull-right"></p>')
+			.append(document.createTextNode(new Date(message.time).format('h:i')));
+
+		var messageElem = $('<p class="chat-message-text"></p>')
+			.append(document.createTextNode(message.data));
+
+		var messageDivElem = $('<div class="chat-message"></div>')
+			.append(timeElem)
+			.append(messageElem);
+
+		// Append the message element to the chat log
+		chatLog.append(messageDivElem);
 	}
 
 	// Clear all messages from the chat log

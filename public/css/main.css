@@ -55,7 +55,11 @@
 | Chat message styles
 */
 
-.chat-message {
+.chat-log-username {
+	font-weight: bold;
+}
+
+.chat-message-text {
 	word-wrap: break-word;
 	margin-right: 60px;
 }
@@ -63,6 +67,7 @@
 .chat-message-time {
 	color: #888;
 	width: 50px;
+	text-align: right;
 }
 
 /*

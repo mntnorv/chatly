@@ -138,14 +138,27 @@ Chat.prototype.removeContact = function(username) {
 
 // Join a chat room
 Chat.prototype.joinRoom = function(roomName) {
+	var self = this;
 	this.leaveCurrentRoom();
 
 	this.roomRef = new Firebase(this.config.firebaseUrl + "/rooms/" + roomName);
-	this.roomRef.on('child_added', function (snapshot) {
-		this.trigger('gotChatMessage', snapshot.val());
+	this.roomRef.limit(100).on('child_added', function (snapshot) {
+		self.trigger('gotChatMessage', snapshot.val());
 	});
 
 	this.trigger('joinedRoom', roomName);
+};
+
+Chat.prototype.sendToRoom = function(message) {
+	if (this.roomRef) {
+		this.roomRef.push().setWithPriority({
+			data: message,
+			from: this.username,
+			time: Firebase.ServerValue.TIMESTAMP
+		}, Firebase.ServerValue.TIMESTAMP);
+	} else {
+		console.warn('Tried to send message when no room is joined');
+	}
 };
 
 // Leave current chat room if a room is joined

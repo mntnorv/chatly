@@ -31,27 +31,27 @@
 				<div id="chat-window" class="fullwidth-sm fullheight-sm">
 					<div id="chat-log-container" class="fullwidth-sm">
 						<div id="chat-log" class="fullwidth-sm">
-							<p><strong>test_user</strong></p>
+							<p class="chat-log-username">test_user</p>
 							<div>
 								<p class="chat-message-time pull-right">10:11</p>
-								<p class="chat-message">Hey another_test_user!</p>
+								<p class="chat-message-text">Hey another_test_user!</p>
 							</div>
 
 							<div>
 								<p class="chat-message-time pull-right">10:11</p>
-								<p class="chat-message">Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user!</p>
+								<p class="chat-message-text">Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user! Hey another_test_user!</p>
 							</div>
 							
-							<p><strong>another_test_user</strong></p>
+							<p class="chat-log-username">another_test_user</p>
 							<div>
 								<p class="chat-message-time pull-right">10:11</p>
-								<p class="chat-message">WHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAT?</p>
+								<p class="chat-message-text">WHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAT?</p>
 							</div>
 						</div>
 					</div>
 
 					<div id="chat-input" class="fullwidth-sm">
-						<form>
+						<form onsubmit="chatly.submitChatMessage($(this)); return false;">
 							<div class="input-group">
 								<input class="form-control" type="text" name="message" placeholder="Type a message..." />
 								<span class="input-group-btn">
