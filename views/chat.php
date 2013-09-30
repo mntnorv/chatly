@@ -5,8 +5,14 @@
 				<div id="chat-sidebar-container">
 					<div>
 						<span class="sidebar-title">Chat rooms</span>
-						<button class="btn btn-success btn-xs pull-right">Create</button>
+						<button class="btn btn-success btn-xs pull-right" data-toggle="collapse" data-target="#create-room-form">Create</button>
 					</div>
+
+					<form id="create-room-form" class="collapse" onsubmit="chatly.submitAddContact($(this)); return false;">
+						<input class="form-control" name="roomname" type="text" placeholder="Room name" autocomplete="off"></input>
+						<ul class="parsley-error-list">
+						</ul>
+					</form>
 					
 					<div id="chat-rooms" class="sidebar-list in">
 						<a class="item" href="#">Room 1</a>
@@ -18,7 +24,7 @@
 					</div>
 
 					<form id="add-contact-form" class="collapse" onsubmit="chatly.submitAddContact($(this)); return false;">
-						<input class="form-control" name="username" type="text" placeholder="username" autocomplete="off"></input>
+						<input class="form-control" name="username" type="text" placeholder="Username" autocomplete="off"></input>
 						<ul class="parsley-error-list">
 						</ul>
 					</form>

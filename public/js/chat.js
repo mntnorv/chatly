@@ -50,31 +50,37 @@
 	handleHashChange();
 
 	/////////////////////////////////////////////////////////
-	// Add-contact-form-specific functions
+	// Sidebar-form-specific functions
 
-	$(window).load(function() {
-		var addContactForm = $('#add-contact-form');
-		var usernameInput = addContactForm.children('[name="username"]');
+	// Init a sidebar form with one input
+	function initSidebarForm(formSelector, inputSelector) {
+		var formElem = $(formSelector);
+		var inputElem = formElem.children(inputSelector);
 
 		// Focus the input when form shown
-		addContactForm.on('shown.bs.collapse', function () {
-			usernameInput.focus();
+		formElem.on('shown.bs.collapse', function () {
+			inputElem.focus();
 		});
 
 		// Clear input and remove errors when form hidden
-		addContactForm.on('hidden.bs.collapse', function () {
-			usernameInput
+		formElem.on('hidden.bs.collapse', function () {
+			inputElem
 				.val('')
 				.removeClass('parsley-error')
 				.blur();
 
-			addContactForm.children('.parsley-error-list').html('');
+			formElem.children('.parsley-error-list').html('');
 		});
 
 		// Hide the form when input lost focus
-		usernameInput.focusout(function () {
-			addContactForm.collapse('hide');
+		inputElem.focusout(function () {
+			formElem.collapse('hide');
 		});
+	}
+
+	$(window).load(function() {
+		initSidebarForm('#add-contact-form', '[name="username"]');
+		initSidebarForm('#create-room-form', '[name="roomname"]');
 	});
 
 	// Submit the add contact form
