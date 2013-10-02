@@ -1,262 +1,256 @@
 
-(function (chatly, $, undefined) {
+/////////////////////////////////////////////////////////
+// Chat
 
-	/////////////////////////////////////////////////////////
-	// Chat
+// Chat object constructor
+function Chat(opts) {
+	// Define options as an empty object if opts is null
+	var options = opts || {};
 
-	// Create a chat object
-	var chat = new Chat();
+	// Default configuration
+	var config = this.config = {
+		firebaseUrl: "https://chatly.firebaseio.com"
+	};
 
-	// Set chat callbacks
-	chat.on('contactAdded',   handleContactAdded);
-	chat.on('leftRoom',       handleLeftRoom);
-	chat.on('gotChatMessage', handleChatMessage);
-
-	// Start the chat engine!
-	chat.start();
-
-	// The last message in the room was sent by this user
-	var lastUsername;
-
-	/////////////////////////////////////////////////////////
-	// Chat method proxies
-	chatly.confirmRequest = chat.confirmFriendRequest.bind(chat);
-	chatly.removeContact  = chat.removeContact.bind(chat);
-
-	/////////////////////////////////////////////////////////
-	// URL hash change handling
-	function getDeparamedHash() {
-		return $.deparam(window.location.hash.substring(1));
+	// Set config from options
+	for (item in options) {
+		this.config[item] = options[item];
 	}
 
-	var handleHashChange = function () {
-		$('#contact-list > .active')
-			.removeClass('active');
+	// Contact array
+	this.contacts = {};
 
-		if (window.location.hash) {
-			var hashObject = getDeparamedHash();
+	// User room array
+	this.user_rooms = {};
 
-			if (hashObject.room) {
-				chat.joinRoom(hashObject.room);
-				$('#contact-list > [data-room="' + hashObject.room + '"]')
-					.addClass('active');
+	// Firebase connection reference
+	this.connectedRef = new Firebase(this.config.firebaseUrl + "/.info/connected");
+
+	// Set callbacks
+	this.on('gotUsername', this.handleGotUsername.bind(this));
+}
+
+// Add event functionality to Chat
+asEvented.call(Chat.prototype);
+
+/////////////////////////////////////////////////////////
+// Chat prototype methods
+
+// Starts the chat
+Chat.prototype.start = function() {
+	this.getUsername();
+};
+
+// Get the username
+Chat.prototype.getUsername = function() {
+	var self = this;
+	$.ajax("/user/getusername.php")
+		.done(function (response) {
+			if (response.username) {
+				self.trigger("gotUsername", response.username);
+			}
+		})
+		.fail(function() {
+			alert("Error: unable to get your username.");
+		});
+};
+
+// Connect to the chat server
+Chat.prototype.connect = function(username) {
+	var self = this;
+
+	this.userRef = new Firebase(this.config.firebaseUrl + "/users/" + username);
+
+	this.connectedRef.on('value', function(snapshot) {
+		if (snapshot.val() === true) {
+			console.log("Connected to Firebase...");
+
+			// On disconnect
+			self.userRef.child('loggedIn').onDisconnect().set(null);
+
+			// Set login state
+			self.userRef.child('loggedIn').set(true);
+
+			// Contact handlers
+			self.userRef.child('contacts').on('child_added',
+				self.handleContactAdded.bind(self));
+			self.userRef.child('contacts').on('child_removed',
+				self.handleContactRemoved.bind(self));
+
+			// Room handlers
+			self.userRef.child('rooms').on('child_added',
+				self.handleRoomAdded.bind(self));
+			self.userRef.child('rooms').on('child_removed',
+				self.handleRoomRemoved.bind(self));
+		}
+	});
+};
+
+// Send a friend request
+Chat.prototype.sendFriendRequest = function(username, success, failure) {
+	var handleResponse = function (data) {
+		if (data.success === true) {
+			this.handleSendFriendRequest(username);
+			
+			if (success) {
+				success();
 			}
 		} else {
-			chat.leaveCurrentRoom();
+			if (failure) {
+				failure(data.error);
+			}
 		}
 	}
 
-	window.onhashchange = handleHashChange;
-	handleHashChange();
+	$.post(
+		"/ajax/check_contact_username.php",
+		{username: username},
+		handleResponse.bind(this)
+	);
+};
 
-	/////////////////////////////////////////////////////////
-	// Sidebar-form-specific functions
+// Confirm a friend request
+Chat.prototype.confirmFriendRequest = function(username) {
+	var roomName = new Firebase(this.config.firebaseUrl + "/rooms").push().name();
 
-	// Init a sidebar form with one input
-	function initSidebarForm(formSelector, inputSelector) {
-		var formElem = $(formSelector);
-		var inputElem = formElem.children(inputSelector);
+	this.userRef
+		.child('contacts')
+		.child(username)
+		.transaction(function (current_value) {
+			if (current_value === false) {
+				return roomName;
+			} else {
+				return current_value;
+			}
+		})
+	;
 
-		// Focus the input when form shown
-		formElem.on('shown.bs.collapse', function () {
-			inputElem.focus();
-		});
+	new Firebase(this.config.firebaseUrl + "/users/" + username + "/contacts/" + this.username)
+		.transaction(function (current_value) {
+			if (current_value == "sent") {
+				return roomName;
+			} else {
+				return current_value;
+			}
+		})
+	;
+};
 
-		// Clear input and remove errors when form hidden
-		formElem.on('hidden.bs.collapse', function () {
-			inputElem
-				.val('')
-				.removeClass('parsley-error')
-				.blur();
+// Remove a contact / decline a friend request
+Chat.prototype.removeContact = function(username) {
+	this.userRef
+		.child('contacts')
+		.child(username)
+		.set(null)
+	;
 
-			formElem.children('.parsley-error-list').html('');
-		});
+	new Firebase(this.config.firebaseUrl + "/users/" + username + "/contacts/" + this.username)
+		.set(null)
+	;
+};
 
-		// Hide the form when input lost focus
-		inputElem.focusout(function () {
-			formElem.collapse('hide');
-		});
-	}
+// Join a chat room
+Chat.prototype.joinRoom = function(roomName) {
+	var self = this;
+	this.leaveCurrentRoom();
 
-	$(window).load(function() {
-		initSidebarForm('#add-contact-form', '[name="username"]');
-		initSidebarForm('#create-room-form', '[name="roomname"]');
+	this.roomRef = new Firebase(this.config.firebaseUrl + "/rooms/" + roomName);
+	this.roomRef.child('messages').limit(100).on('child_added', function (snapshot) {
+		self.trigger('gotChatMessage', snapshot.val());
 	});
 
-	// Submit the add contact form
-	chatly.submitAddContact = function (form) {
-		var newContactUsername = form.children('[name="username"]').val();
+	this.trigger('joinedRoom', roomName);
+};
 
-		var handleAddContactSuccess = function () {
-			form.collapse('hide');
-		}
+// Send a message to the specified room
+Chat.prototype.sendToRoom = function(message) {
+	if (this.roomRef) {
+		this.roomRef.child('messages').push().setWithPriority({
+			data: message,
+			from: this.username,
+			time: Firebase.ServerValue.TIMESTAMP
+		}, Firebase.ServerValue.TIMESTAMP);
+	} else {
+		console.warn('Tried to send message when no room is joined');
+	}
+};
 
-		var handleAddContactFailed = function (message) {
-			form.children('[name="username"]').addClass('parsley-error');
-			form.children('.parsley-error-list')
-				.html($('<li></li>')
-					.append(document.createTextNode(message))
-				)
-			;
-		}
-
-		chat.sendFriendRequest(
-			newContactUsername,
-			handleAddContactSuccess,
-			handleAddContactFailed
-		);
-	};
-
-	/////////////////////////////////////////////////////////
-	// Chat input specific functions
-	chatly.submitChatMessage = function (form) {
-		var inputElem = form.find('[name="message"]');
-		var message = inputElem.val();
-		inputElem.val('');
-		chat.sendToRoom(message);
-	};
-
-	/////////////////////////////////////////////////////////
-	// Chat callback handlers
-
-	// Add a new contact to the HTML
-	function handleContactAdded(newContact) {
-		// Create a new contact element
-		var contactStatus = $('<span class="glyphicon glyphicon-question-sign status-offline"></span>');
-		
-		var contactElem = $('<a class="item"></a>')
-			.append(contactStatus)
-			.append(document.createTextNode(" " + newContact.username))
-		;
-
-		var confirmElements = $('<span class="pull-right"></span>')
-			.append($('<a>Confirm</a>')
-				.attr({
-					onclick: 'chatly.confirmRequest("' + newContact.username + '");'
-				})
-			)
-			.append(document.createTextNode('/'))
-			.append($('<a>Decline</a>')
-				.attr({
-					onclick: 'chatly.removeContact("' + newContact.username + '");'
-				})
-			)
-		;
-
-		var currentRoom = getDeparamedHash().room;
-		if (newContact.confirmationState === currentRoom) {
-			contactElem.addClass('active');
-		}
-
-		// Handle contact state change
-		var handleStateChange = function (loggedIn, confirmed) {
-			handleContactStateChanged({
-				loggedIn: loggedIn,
-				confirmed: confirmed,
-				statusElem: contactStatus,
-				confirmElem: confirmElements,
-				contactElem: contactElem
-			});
-		};
-
-		// Handle contact removal
-		var handleContactRemoved = function () {
-			contactElem.remove();
-		};
-
-		// Add new contact element to HTML
-		$('#contact-list').append(contactElem);
-
-		// Set contact event handlers
-		newContact.on('stateChanged', handleStateChange);
-		newContact.on('removed', handleContactRemoved);
-
-		// Set first state
-		handleContactStateChanged({
-			loggedIn: newContact.isLoggedIn,
-			confirmed: newContact.confirmationState,
-			statusElem: contactStatus,
-			confirmElem: confirmElements,
-			contactElem: contactElem
-		});
+// Leave current chat room if a room is joined
+Chat.prototype.leaveCurrentRoom = function() {
+	if (this.roomRef) {
+		this.roomRef.off();
+		this.roomRef = null;
 	}
 
-	// Change the contact's appearance on a state change
-	function handleContactStateChanged(opts) {
-		var statusElem  = opts.statusElem;
-		var confirmElem = opts.confirmElem;
-		var contactElem = opts.contactElem;
-		var loggedIn    = opts.loggedIn;
-		var confirmed   = opts.confirmed;
+	this.trigger('leftRoom');
+};
 
-		if (confirmed === "sent") {
-			confirmElem.remove();
-			statusElem.attr({class: "glyphicon glyphicon-question-sign status-offline"});
-		} else if (confirmed === false) {
-			statusElem.attr({class: "glyphicon glyphicon-question-sign status-unknown"});
-			contactElem.append(confirmElem);
-		} else if (confirmed) {
-			confirmElem.remove();
-			contactElem.attr({
-				href       : '#' + $.param({room: confirmed}),
-				'data-room': confirmed
-			});
+/////////////////////////////////////////////////////////
+// Chat event handlers
 
-			if (loggedIn) {
-				statusElem.attr({class: "glyphicon glyphicon-ok-sign status-online"});
+// Event handlers
+Chat.prototype.handleGotUsername = function(username) {
+	this.username = username;
+	this.connect(username);
+};
+
+Chat.prototype.handleContactAdded = function(snapshot) {
+	var newContact = new Contact({
+		parent: this,
+		username: snapshot.name(),
+		contactRef: snapshot.ref()
+	});
+
+	this.contacts[snapshot.name()] = newContact;
+
+	this.trigger('contactAdded', newContact);
+};
+
+Chat.prototype.handleContactRemoved = function(snapshot) {
+	var contact = this.contacts[snapshot.name()];
+	delete this.contacts[snapshot.name()];
+	contact.stop();
+	contact.trigger('removed');
+};
+
+Chat.prototype.handleRoomAdded = function(snapshot) {
+	var newUserRoom = new Room({
+		parent: this,
+		roomid: snapshot.name()
+	});
+
+	this.userRooms[snapshot.name()] = newUserRoom;
+
+	this.trigger('roomAdded', newUserRoom);
+};
+
+Chat.prototype.handleRoomRemoved = function(snapshot) {
+	var room = this.userRooms[snapshot.name()];
+	delete this.userRooms[snapshot.name()];
+	room.stop();
+	room.trigger('removed');
+};
+
+Chat.prototype.handleSendFriendRequest = function(username) {
+	this.userRef
+		.child('contacts')
+		.child(username)
+		.transaction(function (current_value) {
+			if (current_value === null || current_value === undefined) {
+				return "sent";
 			} else {
-				statusElem.attr({class: "glyphicon glyphicon-minus-sign status-offline"});
+				return current_value;
 			}
-		}
-	}
+		})
+	;
 
-	// Add a new chat message to HTML
-	function handleChatMessage(message) {
-		// Get chat log container
-		var chatLog = $('#chat-log');
-
-		// Append the sender's username to the chat log if there were no chat
-		// messages before or the last message was from another user
-		var appendUsername = false;
-		if (lastUsername) {
-			if (lastUsername !== message.from) {
-				appendUsername = true;
+	new Firebase(this.config.firebaseUrl + "/users/" + username + "/contacts/" + this.username)
+		.transaction(function (current_value) {
+			if (current_value === null  || current_value === undefined) {
+				return false;
+			} else {
+				return current_value;
 			}
-		} else {
-			appendUsername = true;
-		}
-
-		if (appendUsername) {
-			lastUsername = message.from;
-
-			// Create the username element
-			var usernameElem = $('<p class="chat-log-username"></p>')
-				.attr({'data-username': message.from})
-				.append(document.createTextNode(message.from));
-
-			// Append the username element to the chat log
-			chatLog.append(usernameElem);
-		}
-
-		// Create the message element
-		var timeElem = $('<p class="chat-message-time pull-right"></p>')
-			.append(document.createTextNode(new Date(message.time).format('H:i')));
-
-		var messageElem = $('<p class="chat-message-text"></p>')
-			.append(document.createTextNode(message.data));
-
-		var messageDivElem = $('<div class="chat-message"></div>')
-			.append(timeElem)
-			.append(messageElem);
-
-		// Append the message element to the chat log
-		chatLog.append(messageDivElem);
-	}
-
-	// Clear all messages from the chat log
-	function handleLeftRoom() {
-		$('#chat-log').html('');
-		lastUsername = null;
-	}
-
-}(window.chatly = window.chatly || {}, jQuery));
+		})
+	;
+};

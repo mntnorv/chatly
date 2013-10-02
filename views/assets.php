@@ -11,4 +11,6 @@
 <script type="text/javascript" src="/js/parsley.min.js"></script>
 <script type="text/javascript" src="/js/asevented.min.js"></script>
 <script type="text/javascript" src='/js/date.format.min.js'></script>
-<script type="text/javascript" src="/js/chat-backend.js"></script>
+<script type="text/javascript" src="/js/contact.js"></script>
+<script type="text/javascript" src="/js/room.js"></script>
+<script type="text/javascript" src="/js/chat.js"></script>
