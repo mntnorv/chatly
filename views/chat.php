@@ -15,7 +15,6 @@
 					</form>
 					
 					<div id="chat-rooms" class="sidebar-list in">
-						<a class="item" href="#">Room 1</a>
 					</div>
 
 					<div>

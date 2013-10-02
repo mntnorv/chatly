@@ -9,6 +9,7 @@
 
 	// Set chat callbacks
 	chat.on('contactAdded',   handleContactAdded);
+	chat.on('roomAdded',      handleRoomAdded);
 	chat.on('leftRoom',       handleLeftRoom);
 	chat.on('gotChatMessage', handleChatMessage);
 
@@ -35,6 +36,8 @@
 	var handleHashChange = function () {
 		$('#contact-list > .active')
 			.removeClass('active');
+		$('#chat-rooms > .active')
+			.removeClass('active');
 
 		if (window.location.hash) {
 			var hashObject = getDeparamedHash();
@@ -42,6 +45,8 @@
 			if (hashObject.room) {
 				chat.joinRoom(hashObject.room);
 				$('#contact-list > [data-room="' + hashObject.room + '"]')
+					.addClass('active');
+				$('#chat-rooms > [data-room="' + hashObject.room + '"]')
 					.addClass('active');
 			}
 		} else {
@@ -69,9 +74,11 @@
 
 		// Clear input and remove errors when form hidden
 		formElem.on('hide.bs.collapse', function () {
-			inputElem
-				.val('')
-				.blur();
+			inputElem.val('');
+
+			if (inputElem.is(':focus')) {
+				inputElem.blur();
+			}
 
 			removeFormErrors(formElem);
 		});
@@ -242,6 +249,39 @@
 				statusElem.attr({class: "glyphicon glyphicon-minus-sign status-offline"});
 			}
 		}
+	}
+
+	// Add a new room to HTML
+	function handleRoomAdded(newRoom) {
+		// Create the room's HTML element
+		var roomElem = $('<a class="item"></a>')
+			.attr({
+				href       : '#' + $.param({room: newRoom.roomId}),
+				'data-room': newRoom.roomId
+			})
+		;
+
+		// Change the room name
+		var handleRoomNameChange = function (name) {
+			roomElem.html(document.createTextNode(name));
+		};
+
+		// Remove room from HTML and leave if currently
+		// in the room being removed
+		var handleRoomRemoved = function () {
+			if (newRoom.roomId === getDeparamedHash().room) {
+				window.location.hash = "";
+			}
+
+			roomElem.remove();
+		};
+
+		// Set new room handlers
+		newRoom.on('nameChanged', handleRoomNameChange);
+		newRoom.on('removed',     handleRoomRemoved);
+
+		// Add new contact element to HTML
+		$('#chat-rooms').append(roomElem);
 	}
 
 	// Add a new chat message to HTML

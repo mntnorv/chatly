@@ -231,7 +231,7 @@ Chat.prototype.handleContactRemoved = function(snapshot) {
 Chat.prototype.handleRoomAdded = function(snapshot) {
 	var newUserRoom = new UserRoom({
 		parent: this,
-		roomid: snapshot.name()
+		roomId: snapshot.name()
 	});
 
 	this.userRooms[snapshot.name()] = newUserRoom;
@@ -240,6 +240,7 @@ Chat.prototype.handleRoomAdded = function(snapshot) {
 };
 
 Chat.prototype.handleRoomRemoved = function(snapshot) {
+	console.log(snapshot.name());
 	var room = this.userRooms[snapshot.name()];
 	delete this.userRooms[snapshot.name()];
 	room.stop();
