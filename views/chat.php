@@ -8,7 +8,7 @@
 						<button class="btn btn-success btn-xs pull-right" data-toggle="collapse" data-target="#create-room-form">Create</button>
 					</div>
 
-					<form id="create-room-form" class="collapse" onsubmit="chatly.submitAddContact($(this)); return false;">
+					<form id="create-room-form" class="collapse" onsubmit="chatly.submitCreateRoom($(this)); return false;">
 						<input class="form-control" name="roomname" type="text" placeholder="Room name" autocomplete="off"></input>
 						<ul class="parsley-error-list">
 						</ul>

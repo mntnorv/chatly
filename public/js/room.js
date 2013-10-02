@@ -4,7 +4,7 @@
 
 // UserRoom constructor
 function UserRoom(opts) {
-	this.roomid = opts.roomid;
+	this.roomId = opts.roomId;
 	this.parent = opts.parent;
 
 	this.roomNameRef = new Firebase(this.parent.config.firebaseUrl + "/rooms/"

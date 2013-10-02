@@ -25,10 +25,13 @@
 
 	/////////////////////////////////////////////////////////
 	// URL hash change handling
+
+	// Get the hash as an object
 	function getDeparamedHash() {
 		return $.deparam(window.location.hash.substring(1));
 	}
 
+	// Handles the hash change event
 	var handleHashChange = function () {
 		$('#contact-list > .active')
 			.removeClass('active');
@@ -46,7 +49,9 @@
 		}
 	}
 
+	// Set the hash change event handler
 	window.onhashchange = handleHashChange;
+	// Fire the event to handle the current hash
 	handleHashChange();
 
 	/////////////////////////////////////////////////////////
@@ -63,13 +68,12 @@
 		});
 
 		// Clear input and remove errors when form hidden
-		formElem.on('hidden.bs.collapse', function () {
+		formElem.on('hide.bs.collapse', function () {
 			inputElem
 				.val('')
-				.removeClass('parsley-error')
 				.blur();
 
-			formElem.children('.parsley-error-list').html('');
+			removeFormErrors(formElem);
 		});
 
 		// Hide the form when input lost focus
@@ -78,6 +82,7 @@
 		});
 	}
 
+	// Initialize the sidebar forms
 	$(window).load(function() {
 		initSidebarForm('#add-contact-form', '[name="username"]');
 		initSidebarForm('#create-room-form', '[name="roomname"]');
@@ -92,12 +97,7 @@
 		}
 
 		var handleAddContactFailed = function (message) {
-			form.children('[name="username"]').addClass('parsley-error');
-			form.children('.parsley-error-list')
-				.html($('<li></li>')
-					.append(document.createTextNode(message))
-				)
-			;
+			setInputError(form.children('[name="username"]'), message);
 		}
 
 		chat.sendFriendRequest(
@@ -106,6 +106,40 @@
 			handleAddContactFailed
 		);
 	};
+
+	// Submit the create room form
+	chatly.submitCreateRoom = function (form) {
+		var newRoomName = form.children('[name="roomname"]').val();
+
+		if (newRoomName) {
+			form.collapse('hide');
+			chat.createRoom(newRoomName);
+		} else {
+			setInputError(
+				form.children('[name="roomname"]'),
+				'Room name cannot be empty'
+			);
+		}
+	}
+
+	// Adds a div containing an error after the specified input
+	// and adds a parsley-error class to the input
+	function setInputError (input, error) {
+		input.addClass('parsley-error');
+		input.after(
+			$('<div class="parsley-error-list"></div>').html(
+				$('<li></li>').append(
+					document.createTextNode(error)
+				)
+			)
+		);
+	}
+
+	// Removes all errors in a form
+	function removeFormErrors (form) {
+		form.find('.parsley-error').removeClass('parsley-error');
+		form.find('.parsley-error-list').remove();
+	}
 
 	/////////////////////////////////////////////////////////
 	// Chat input specific functions

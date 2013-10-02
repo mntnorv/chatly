@@ -21,7 +21,7 @@ function Chat(opts) {
 	this.contacts = {};
 
 	// User room array
-	this.user_rooms = {};
+	this.userRooms = {};
 
 	// Firebase connection reference
 	this.connectedRef = new Firebase(this.config.firebaseUrl + "/.info/connected");
@@ -127,7 +127,7 @@ Chat.prototype.confirmFriendRequest = function(username) {
 
 	new Firebase(this.config.firebaseUrl + "/users/" + username + "/contacts/" + this.username)
 		.transaction(function (current_value) {
-			if (current_value == "sent") {
+			if (current_value === "sent") {
 				return roomName;
 			} else {
 				return current_value;
@@ -150,16 +150,31 @@ Chat.prototype.removeContact = function(username) {
 };
 
 // Join a chat room
-Chat.prototype.joinRoom = function(roomName) {
+Chat.prototype.joinRoom = function(roomId) {
 	var self = this;
 	this.leaveCurrentRoom();
 
-	this.roomRef = new Firebase(this.config.firebaseUrl + "/rooms/" + roomName);
+	this.roomRef = new Firebase(this.config.firebaseUrl + "/rooms/" + roomId);
+
 	this.roomRef.child('messages').limit(100).on('child_added', function (snapshot) {
 		self.trigger('gotChatMessage', snapshot.val());
 	});
 
-	this.trigger('joinedRoom', roomName);
+	this.trigger('joinedRoom', roomId);
+};
+
+// Create a new chat room
+Chat.prototype.createRoom = function(name) {
+	var roomData = {
+		name: name,
+		users: {}
+	};
+	roomData.users[this.username] = true;
+
+	var newRoomRef = new Firebase(this.config.firebaseUrl + "/rooms").push();
+	newRoomRef.set(roomData);
+
+	this.userRef.child('rooms').child(newRoomRef.name()).set(true);
 };
 
 // Send a message to the specified room
@@ -214,7 +229,7 @@ Chat.prototype.handleContactRemoved = function(snapshot) {
 };
 
 Chat.prototype.handleRoomAdded = function(snapshot) {
-	var newUserRoom = new Room({
+	var newUserRoom = new UserRoom({
 		parent: this,
 		roomid: snapshot.name()
 	});
