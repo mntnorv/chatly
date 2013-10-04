@@ -23,6 +23,9 @@ function Chat(opts) {
 	// User room array
 	this.userRooms = {};
 
+	// Create a new job queue
+	this.queue = [];
+
 	// Firebase connection reference
 	this.connectedRef = new Firebase(this.config.firebaseUrl + "/.info/connected");
 
@@ -82,8 +85,27 @@ Chat.prototype.connect = function(username) {
 				self.handleRoomAdded.bind(self));
 			self.userRef.child('rooms').on('child_removed',
 				self.handleRoomRemoved.bind(self));
+
+			// Do jobs in queue
+			self.runQueuedJobs.bind(self).call();
 		}
 	});
+};
+
+// Runs all of the queued jobs
+Chat.prototype.runQueuedJobs = function() {
+	for (var i = this.queue.length - 1; i >= 0; i--) {
+		switch (this.queue[i].type) {
+			case 'room':
+				this.joinRoom(this.queue[i].roomId);
+				break;
+			case 'contactRoom':
+				this.joinContactRoom(this.queue[i].username);
+				break;
+		}
+
+		delete this.queue[i];
+	}
 };
 
 // Send a friend request
@@ -152,15 +174,52 @@ Chat.prototype.removeContact = function(username) {
 // Join a chat room
 Chat.prototype.joinRoom = function(roomId) {
 	var self = this;
+
+	// Leave current room
 	this.leaveCurrentRoom();
 
-	this.roomRef = new Firebase(this.config.firebaseUrl + "/rooms/" + roomId);
+	if (this.userRef) {
+		// Join a new room
+		this.roomRef = new Firebase(this.config.firebaseUrl + "/rooms/" + roomId);
+		this.roomRef.child('messages').limit(100).on('child_added', function (snapshot) {
+			self.trigger('gotChatMessage', snapshot.val());
+		});
 
-	this.roomRef.child('messages').limit(100).on('child_added', function (snapshot) {
-		self.trigger('gotChatMessage', snapshot.val());
-	});
+		this.trigger('joinedRoom', roomId);
+	} else {
+		// Not connected to Firebase yet
+		// Add this job to the queue
+		this.queue.push({
+			type: 'room',
+			roomId: roomId
+		});
+	}
+};
 
-	this.trigger('joinedRoom', roomId);
+// Join a contact chat room
+Chat.prototype.joinContactRoom = function(username) {
+	var self = this;
+
+	// Leave current room
+	this.leaveCurrentRoom();
+
+	if (this.userRef) {
+		// Get the roomId associated wih the specified contact
+		this.userRef.child('contacts').child(username).once('value', function (snapshot) {
+			// Check if the contact is in the contact list
+			if (snapshot.val() && snapshot.val() !== "sent") {
+				// Finally, join the room
+				self.joinRoom(snapshot.val());
+			}
+		});
+	} else {
+		// Not connected to Firebase yet
+		// Add this job to the queue
+		this.queue.push({
+			type: 'contactRoom',
+			username: username
+		});
+	}
 };
 
 // Create a new chat room

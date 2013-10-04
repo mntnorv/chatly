@@ -37,6 +37,6 @@ Contact.prototype.handleLoginStateChange = function(snapshot) {
 };
 
 Contact.prototype.handleConfirmationStateChange = function(snapshot) {
-	this.confirmationState = snapshot.val();
-	this.trigger('stateChanged', this.isLoggedIn, this.confirmationState);
+	this.state = snapshot.val();
+	this.trigger('stateChanged', this.isLoggedIn, this.state);
 };
