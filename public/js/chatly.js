@@ -184,6 +184,7 @@
 			)
 		;
 
+		// Highlight current room
 		var currentRoom = getDeparamedHash().room;
 		if (newContact.confirmationState === currentRoom) {
 			contactElem.addClass('active');
@@ -260,6 +261,12 @@
 				'data-room': newRoom.roomId
 			})
 		;
+
+		// Highlight current room
+		var currentRoom = getDeparamedHash().room;
+		if (newRoom.roomId === currentRoom) {
+			roomElem.addClass('active');
+		}
 
 		// Change the room name
 		var handleRoomNameChange = function (name) {

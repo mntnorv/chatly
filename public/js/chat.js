@@ -193,6 +193,7 @@ Chat.prototype.sendToRoom = function(message) {
 // Leave current chat room if a room is joined
 Chat.prototype.leaveCurrentRoom = function() {
 	if (this.roomRef) {
+		this.roomRef.child('messages').off();
 		this.roomRef.off();
 		this.roomRef = null;
 	}
@@ -240,7 +241,6 @@ Chat.prototype.handleRoomAdded = function(snapshot) {
 };
 
 Chat.prototype.handleRoomRemoved = function(snapshot) {
-	console.log(snapshot.name());
 	var room = this.userRooms[snapshot.name()];
 	delete this.userRooms[snapshot.name()];
 	room.stop();
