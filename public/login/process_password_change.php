@@ -1,12 +1,10 @@
 <?php
-	include '../../includes/db_connect.php';
-	include '../../includes/functions.php';
-	secure_session_start();
+	include '../../includes/ChatlyAuth.php';
+	include '../../includes/Messaging.php';
+	ChatlyAuth::startSecureSession();
 
-	include '../../includes/login_check.php';
-
-	if($logged_in == false) {
-		set_error_message('Stop trying to hack me.');
+	if(ChatlyAuth::getCachedLoginState() == false) {
+		Messaging::setErrorMessage('Stop trying to hack me.');
 		header('Location: /');
 		die();
 	}
@@ -20,12 +18,12 @@
 		$invalid = false;
 
 		if ($new_password != $new_password_confirm) {
-			set_error_message('Your passwords do not match.');
+			Messaging::setErrorMessage('Your passwords do not match.');
 			$invalid = true;
 		}
 
 		if (strlen($new_password) < 8) {
-			set_error_message('Your password is too short. It sould have at least 8 characters.');
+			Messaging::setErrorMessage('Your password is too short. It sould have at least 8 characters.');
 			$invalid = true;
 		}
 
@@ -34,14 +32,14 @@
 			die();
 		}
 
-		if(change_password($username, $old_password, $new_password, $pdo) == true) {
-			set_success_message('Successfully changed your password.');
+		if(ChatlyAuth::changePassword($username, $old_password, $new_password) == true) {
+			Messaging::setSuccessMessage('Successfully changed your password.');
 			header('Location: /user/settings.php');
 		} else {
-			set_error_message('<strong>Error:</strong> incorrect password.');
+			Messaging::setErrorMessage('<strong>Error:</strong> incorrect password.');
 			header('Location: /user/settings.php');
 		}
 	} else {
-		set_error_message('<strong>Error:</strong> unable to process password change request.');
+		Messaging::setErrorMessage('<strong>Error:</strong> unable to process password change request.');
 		header('Location: /user/settings.php');
 	}

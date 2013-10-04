@@ -1,44 +1,104 @@
 <?php
 
+include_once "FirebaseToken.php";
+include_once "ChatlyDB.php";
+
+class ChatlyAuth {
+
 	//================================================================================
-	// Includes
+	// Private class properties
 	//================================================================================
 
-	include_once "FirebaseToken.php";
+	private static $cachedLoginState;
 
 	//================================================================================
-	// Login / registration / session functions
+	// Session - related methods
 	//================================================================================
 
-	function secure_session_start() {
+	// Start a secure session
+	public static function startSecureSession() {
 		$session_name = 'chatly_secure_session';
 		$secure = false; // Set to true if using https.
 		$httponly = true; // This stops javascript being able to access the session id.
 
 		ini_set('session.use_only_cookies', 1);
 		$cookieParams = session_get_cookie_params();
-		session_set_cookie_params($cookieParams["lifetime"], $cookieParams["path"], $cookieParams["domain"], $secure, $httponly);
+		session_set_cookie_params(
+			$cookieParams["lifetime"],
+			$cookieParams["path"],
+			$cookieParams["domain"],
+			$secure,
+			$httponly
+		);
 		session_name($session_name);
 		session_start();
 		session_regenerate_id();
 	}
 
-	function get_firebase_token($username) {
+	// Get the Firebase authentication token
+	public static function getFirebaseToken($username) {
 		$secret = "qgMnx4KvMeNrjtK8ml3iDvIpyv9NB0nfOfzg67IW";
 		$tokenGen = new Services_FirebaseTokenGenerator($secret);
 		return $tokenGen->createToken(array("id" => $username));
 	}
 
-	function set_login_session($user_id, $username, $salted_password) {
-		$user_browser = $_SERVER['HTTP_USER_AGENT'];
-		$user_id = preg_replace("/[^0-9]+/", "", $user_id);
-		$_SESSION['user_id'] = $user_id;
-		$username = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $username);
-		$_SESSION['username'] = $username;
-		$_SESSION['login_string'] = hash('sha512', $salted_password.$user_browser);
+	// Check if user is logged in
+	public static function checkLogin() {
+		$pdo = ChatlyDB::getPDO();
+
+		if(isset($_SESSION['user_id'], $_SESSION['username'], $_SESSION['login_string'])) {
+			// Get user info from session
+			$user_id      = $_SESSION['user_id'];
+			$username     = $_SESSION['username'];
+			$login_string = $_SESSION['login_string'];
+
+			$user_browser = $_SERVER['HTTP_USER_AGENT'];
+
+			// Get user password
+			$stmt = $pdo->prepare("SELECT password FROM users WHERE id = :user_id LIMIT 1");
+			$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+			$stmt->execute();
+
+			$row = $stmt->fetch();
+			if ($row != FALSE) {
+				$password = $row['password'];
+				$login_check = hash('sha512', $password.$user_browser);
+				
+				// Check if $_SESSION info matches the current session
+				if($login_check == $login_string) {
+					self::$cachedLoginState = true;
+					return true;
+				} else {
+					self::$cachedLoginState = false;
+					return false;
+				}
+			} else {
+				self::$cachedLoginState = false;
+				return false;
+			}
+		} else {
+			self::$cachedLoginState = false;
+			return false;
+		}
 	}
 
-	function login($username, $password, $pdo) {
+	// Get the cached login state
+	// If it not set, call checkLogin() and return the new value
+	public static function getCachedLoginState() {
+		if (self::$cachedLoginState === NULL) {
+			self::checkLogin();
+		}
+
+		return self::$cachedLoginState;
+	}
+
+	//================================================================================
+	// Login - related methods
+	//================================================================================
+
+	public static function login($username, $password) {
+		$pdo = ChatlyDB::getPDO();
+
 		// Hash the password
 		$password = hash('sha512', $password);
 
@@ -57,7 +117,7 @@
 
 			$password = hash('sha512', $password.$salt);
 
-			if (checkbrute($user_id, $pdo)) {
+			if (self::checkBrute($user_id)) {
 				// Account is locked
 				// Too many login attempts
 				return false;
@@ -65,7 +125,7 @@
 				// Check if password is correct
 				if ($db_password == $password) {
 					// Correct!
-					set_login_session($user_id, $username, $password);
+					self::setLoginSession($user_id, $username, $password);
 					return true;
 				} else {
 					// Incorrect!
@@ -85,7 +145,20 @@
 		}
 	}
 
-	function register($username, $password, $pdo) {
+	public static function logout() {
+		$_SESSION = array();
+		$params = session_get_cookie_params();
+		setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+		session_destroy();
+	}
+
+	//================================================================================
+	// Registration - related methods
+	//================================================================================
+
+	public static function register($username, $password) {
+		$pdo = ChatlyDB::getPDO();
+
 		// Hash the password
 		$password = hash('sha512', $password);
 
@@ -110,7 +183,7 @@
 			$user_id = $row['id'];
 
 			// Login
-			set_login_session($user_id, $username, $password_salted);
+			self::setLoginSession($user_id, $username, $password_salted);
 
 			// Return true (succeeded)
 			return true;
@@ -119,7 +192,13 @@
 		}
 	}
 
-	function change_password($username, $old_password, $new_password, $pdo) {
+	//================================================================================
+	// User data - related methods
+	//================================================================================
+
+	function changePassword($username, $old_password, $new_password) {
+		$pdo = ChatlyDB::getPDO();
+
 		// Hash the password
 		$new_password = hash('sha512', $new_password);
 
@@ -151,7 +230,7 @@
 				$return = $stmt->execute();
 
 				// Update user session
-				set_login_session($user_id, $username, $new_password_salted);
+				self::setLoginSession($user_id, $username, $new_password_salted);
 
 				// Return true if the change succeeded, false otherwise
 				if ($return != FALSE) {
@@ -167,7 +246,25 @@
 		}
 	}
 
-	function checkbrute($user_id, $pdo) {
+	//================================================================================
+	// Private methods
+	//================================================================================
+
+	// Set or update the login session
+	private static function setLoginSession($user_id, $username, $salted_password) {
+		$user_browser = $_SERVER['HTTP_USER_AGENT'];
+		$user_id = preg_replace("/[^0-9]+/", "", $user_id);
+		$_SESSION['user_id'] = $user_id;
+		$username = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $username);
+		$_SESSION['username'] = $username;
+		$_SESSION['login_string'] = hash('sha512', $salted_password.$user_browser);
+	}
+
+	// Check if the uses has tried to login unsuccessfully five times
+	// in two hours
+	private static function checkBrute($user_id) {
+		$pdo = ChatlyDB::getPDO();
+
 		// Get the time before 2 hours
 		$now = time();
 		$valid_attempts = $now - (2 * 60 * 60);
@@ -188,57 +285,4 @@
 			return false;
 		}
 	}
-
-	function login_check($pdo) {
-		if(isset($_SESSION['user_id'], $_SESSION['username'], $_SESSION['login_string'])) {
-			// Get user info from session
-			$user_id      = $_SESSION['user_id'];
-			$username     = $_SESSION['username'];
-			$login_string = $_SESSION['login_string'];
-
-			$user_browser = $_SERVER['HTTP_USER_AGENT'];
-
-			// Get user password
-			$stmt = $pdo->prepare("SELECT password FROM users WHERE id = :user_id LIMIT 1");
-			$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-			$stmt->execute();
-
-			$row = $stmt->fetch();
-			if ($row != FALSE) {
-				$password = $row['password'];
-				$login_check = hash('sha512', $password.$user_browser);
-				
-				// Check if $_SESSION info matches the current session
-				if($login_check == $login_string) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
-
-	//================================================================================
-	// Messages
-	//================================================================================
-
-	function set_success_message($message) {
-		set_message($message, 'success');
-	}
-
-	function set_error_message($message) {
-		set_message($message, 'error');
-	}
-
-	function set_notice_message($message) {
-		set_message($message, 'notice');
-	}
-
-	function set_message($message, $type) {
-		$_SESSION['message']      = $message;
-		$_SESSION['message_type'] = $type;
-	}
+}

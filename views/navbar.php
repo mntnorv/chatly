@@ -13,7 +13,7 @@
 		<!-- Login form -->
 		<div class="navbar-collapse collapse">
 			<?php
-				if($logged_in == true) {
+				if(ChatlyAuth::getCachedLoginState() == true) {
 					include 'navbar_logged_in.php';
 				} else if (basename($_SERVER['REQUEST_URI']) != "login.php") {
 					include 'navbar_login_form.php';

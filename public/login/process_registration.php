@@ -1,7 +1,7 @@
 <?php
-	include '../../includes/db_connect.php';
-	include '../../includes/functions.php';
-	secure_session_start();
+	include '../../includes/ChatlyAuth.php';
+	include '../../includes/Messaging.php';
+	ChatlyAuth::startSecureSession();
 
 	if (isset($_POST['username'], $_POST['password'], $_POST['password_confirm'])) {
 		$username = $_POST['username'];
@@ -16,12 +16,12 @@
 		}
 
 		if (strlen($username) < 6) {
-			set_error_message('Your username is too short. It sould have at least 6 characters.');
+			Messaging::setErrorMessage('Your username is too short. It sould have at least 6 characters.');
 			$invalid = true;
 		}
 
 		if (strlen($password) < 8) {
-			set_error_message('Your password is too short. It sould have at least 8 characters.');
+			Messaging::setErrorMessage('Your password is too short. It sould have at least 8 characters.');
 			$invalid = true;
 		}
 
@@ -30,14 +30,14 @@
 			die();
 		}
 
-		if(register($username, $password, $pdo) == true) {
-			set_success_message('You have registered successfully.');
+		if(ChatlyAuth::register($username, $password) == true) {
+			Messaging::setSuccessMessage('You have registered successfully.');
 			header('Location: /');
 		} else {
-			set_error_message('This username already exists. Please choose another username.');
+			Messaging::setErrorMessage('This username already exists. Please choose another username.');
 			header('Location: /register.php');
 		}
 	} else {
-		set_error_message('<strong>Error:</strong> unable to process registration request.');
+		Messaging::setErrorMessage('<strong>Error:</strong> unable to process registration request.');
 		header('Location: /register.php');
 	}

@@ -1,9 +1,11 @@
 <?php
-	include_once '../../includes/db_connect.php';
+	include_once '../../includes/ChatlyDB.php';
 
 	$response = array();
 
 	if (isset($_POST['username'])) {
+		$pdo = ChatlyDB::getPDO();
+
 		$username = $_POST['username'];
 
 		$stmt = $pdo->prepare("SELECT id FROM users WHERE username = :username");

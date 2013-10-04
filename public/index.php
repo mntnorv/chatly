@@ -1,9 +1,6 @@
 <?php
-	include_once '../includes/db_connect.php';
-	include_once '../includes/functions.php';
-	secure_session_start();
-
-	include_once '../includes/login_check.php';
+	include_once '../includes/ChatlyAuth.php';
+	ChatlyAuth::startSecureSession();
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +22,7 @@
 
 	<!-- Insert frontpage or chat -->
 	<?php
-		if($logged_in == true) {
+		if(ChatlyAuth::getCachedLoginState() === true) {
 			include '../views/chat.php';
 		} else {
 			include '../views/frontpage.php';

@@ -1,15 +1,12 @@
 <?php
-	include_once '../../includes/db_connect.php';
-	include_once '../../includes/functions.php';
-	secure_session_start();
-
-	include_once '../../includes/login_check.php';
+	include_once '../../includes/ChatlyAuth.php';
+	ChatlyAuth::startSecureSession();
 
 	$response = array();
 
-	if ($logged_in) {
+	if (ChatlyAuth::getCachedLoginState() === true) {
 		$username = $_SESSION['username'];
-		$response['token'] = get_firebase_token($username);
+		$response['token'] = ChatlyAuth::getFirebaseToken($username);
 		$response['username'] = $username;
 	} else {
 		$response['error'] = "You must be logged in to get your token.";

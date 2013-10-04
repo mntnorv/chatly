@@ -1,19 +1,20 @@
 <?php
-	include '../../includes/db_connect.php';
-	include '../../includes/functions.php';
-	secure_session_start();
+	include '../../includes/ChatlyAuth.php';
+	include '../../includes/Messaging.php';
+	ChatlyAuth::startSecureSession();
 
 	if (isset($_POST['username'], $_POST['password'])) {
 		$username = $_POST['username'];
 		$password = $_POST['password'];
-		if(login($username, $password, $pdo) == true) {
-			set_success_message('Logged in successfully.');
+		
+		if(ChatlyAuth::login($username, $password) == true) {
+			Messaging::setSuccessMessage('Logged in successfully.');
 			header('Location: /');
 		} else {
-			set_error_message('Incorrect username or password.');
+			Messaging::setErrorMessage('Incorrect username or password.');
 			header('Location: /login.php');
 		}
 	} else {
-		set_error_message('<strong>Error:</strong> unable to process login request.');
+		Messaging::setErrorMessage('<strong>Error:</strong> unable to process login request.');
 		header('Location: /login.php');
 	}

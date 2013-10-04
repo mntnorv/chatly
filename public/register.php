@@ -1,12 +1,10 @@
 <?php
-	include_once '../includes/db_connect.php';
-	include_once '../includes/functions.php';
-	secure_session_start();
+	include_once '../includes/ChatlyAuth.php';
+	include_once '../includes/Messaging.php';
+	ChatlyAuth::startSecureSession();
 
-	include_once '../includes/login_check.php';
-
-	if($logged_in == true) {
-		set_notice_message('You are already logged in.');
+	if(ChatlyAuth::getCachedLoginState() === true) {
+		Messaging::setNoticeMessage('You are already logged in.');
 		header('Location: ./');
 		die();
 	}

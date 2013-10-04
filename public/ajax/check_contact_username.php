@@ -1,11 +1,13 @@
 <?php
-	include_once '../../includes/db_connect.php';
-	include_once '../../includes/functions.php';
-	secure_session_start();
+	include_once '../../includes/ChatlyDB.php';
+	include_once '../../includes/ChatlyAuth.php';
+	ChatlyAuth::startSecureSession();
 
 	$response = array();
 
 	if (isset($_POST['username'])) {
+		$pdo = ChatlyDB::getPDO();
+		
 		$username = $_POST['username'];
 
 		if ($username == $_SESSION['username']) {

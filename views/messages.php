@@ -1,30 +1,39 @@
 <?php
+	include_once (dirname(__FILE__) . '/../includes/Messaging.php');
+
 	$message_class = "";
 
-	$message      = $_SESSION['message'];
-	$message_type = $_SESSION['message_type'];
-	$_SESSION['message']      = null;
-	$_SESSION['message_type'] = null;
+	$isMessageSet = Messaging::isMessageSet();
 
-	switch ($message_type) {
-		case 'success':
-			$message_class = "alert-success";
-			break;
+	$message;
+	$message_text;
+	$message_type;
 
-		case 'error':
-			$message_class = "alert-danger";
-			break;
+	if ($isMessageSet) {
+		$message      = Messaging::getMessage();
+		$message_text = $message['message_text'];
+		$message_type = $message['message_type'];
 
-		case 'notice':
-			$message_class = "alert-info";
-			break;
+		switch ($message_type) {
+			case 'success':
+				$message_class = "alert-success";
+				break;
+
+			case 'error':
+				$message_class = "alert-danger";
+				break;
+
+			case 'notice':
+				$message_class = "alert-info";
+				break;
+		}
 	}
 ?>
 
-<?php if ($message != null) : ?>
+<?php if ($isMessageSet) : ?>
 	<div class="alert <?php echo $message_class; ?>">
 		<div class="container">
-			<?php echo $message; ?>
+			<?php echo $message_text; ?>
 		</div>
 	</div>
 
