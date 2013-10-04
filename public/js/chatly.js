@@ -191,7 +191,7 @@
 		;
 
 		// Highlight current room
-		if (newContact.confirmationState === state.currentRoom) {
+		if (newContact.username === state.currentUserRoom) {
 			contactElem.addClass('active');
 		}
 

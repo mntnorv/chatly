@@ -30,7 +30,7 @@ function Chat(opts) {
 	this.connectedRef = new Firebase(this.config.firebaseUrl + "/.info/connected");
 
 	// Set callbacks
-	this.on('gotUsername', this.handleGotUsername.bind(this));
+	this.on('gotToken', this.handleGotToken.bind(this));
 }
 
 // Add event functionality to Chat
@@ -41,16 +41,16 @@ asEvented.call(Chat.prototype);
 
 // Starts the chat
 Chat.prototype.start = function() {
-	this.getUsername();
+	this.getUserToken();
 };
 
 // Get the username
-Chat.prototype.getUsername = function() {
+Chat.prototype.getUserToken = function() {
 	var self = this;
-	$.ajax("/user/getusername.php")
+	$.ajax("/user/gettoken.php")
 		.done(function (response) {
-			if (response.username) {
-				self.trigger("gotUsername", response.username);
+			if (response.username && response.token) {
+				self.trigger("gotToken", response);
 			}
 		})
 		.fail(function() {
@@ -62,32 +62,15 @@ Chat.prototype.getUsername = function() {
 Chat.prototype.connect = function(username) {
 	var self = this;
 
-	this.userRef = new Firebase(this.config.firebaseUrl + "/users/" + username);
+	this.userRef = new Firebase(this.config.firebaseUrl + "/users/"
+		+ this.username);
 
-	this.connectedRef.on('value', function(snapshot) {
-		if (snapshot.val() === true) {
-			console.log("Connected to Firebase...");
-
-			// On disconnect
-			self.userRef.child('loggedIn').onDisconnect().set(null);
-
-			// Set login state
-			self.userRef.child('loggedIn').set(true);
-
-			// Contact handlers
-			self.userRef.child('contacts').on('child_added',
-				self.handleContactAdded.bind(self));
-			self.userRef.child('contacts').on('child_removed',
-				self.handleContactRemoved.bind(self));
-
-			// Room handlers
-			self.userRef.child('rooms').on('child_added',
-				self.handleRoomAdded.bind(self));
-			self.userRef.child('rooms').on('child_removed',
-				self.handleRoomRemoved.bind(self));
-
-			// Do jobs in queue
-			self.runQueuedJobs.bind(self).call();
+	this.userRef.auth(this.token, function (error, result) {
+		if (error) {
+			console.error('Error: unable to login: ' + error);
+		} else {
+			console.log('Expires at: ' + new Date(result.expires * 1000))
+			self.handleAuthSuccess.bind(self).call();
 		}
 	});
 };
@@ -263,10 +246,43 @@ Chat.prototype.leaveCurrentRoom = function() {
 /////////////////////////////////////////////////////////
 // Chat event handlers
 
+Chat.prototype.handleAuthSuccess = function() {
+	var self = this;
+
+	this.connectedRef.on('value', function(snapshot) {
+		if (snapshot.val() === true) {
+			console.log("Connected to Firebase...");
+
+			// On disconnect
+			self.userRef.child('loggedIn').onDisconnect().set(null);
+
+			// Set login state
+			self.userRef.child('loggedIn').set(true);
+
+			// Contact handlers
+			self.userRef.child('contacts').on('child_added',
+				self.handleContactAdded.bind(self));
+			self.userRef.child('contacts').on('child_removed',
+				self.handleContactRemoved.bind(self));
+
+			// Room handlers
+			self.userRef.child('rooms').on('child_added',
+				self.handleRoomAdded.bind(self));
+			self.userRef.child('rooms').on('child_removed',
+				self.handleRoomRemoved.bind(self));
+
+			// Do jobs in queue
+			self.runQueuedJobs.bind(self).call();
+		}
+	});
+};
+
 // Event handlers
-Chat.prototype.handleGotUsername = function(username) {
-	this.username = username;
-	this.connect(username);
+Chat.prototype.handleGotToken = function(response) {
+	this.username = response.username;
+	this.token = response.token;
+
+	this.connect();
 };
 
 Chat.prototype.handleContactAdded = function(snapshot) {

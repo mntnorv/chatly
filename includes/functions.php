@@ -1,6 +1,12 @@
 <?php
 
 	//================================================================================
+	// Includes
+	//================================================================================
+
+	include_once "FirebaseToken.php";
+
+	//================================================================================
 	// Login / registration / session functions
 	//================================================================================
 
@@ -15,6 +21,12 @@
 		session_name($session_name);
 		session_start();
 		session_regenerate_id();
+	}
+
+	function get_firebase_token($username) {
+		$secret = "qgMnx4KvMeNrjtK8ml3iDvIpyv9NB0nfOfzg67IW";
+		$tokenGen = new Services_FirebaseTokenGenerator($secret);
+		return $tokenGen->createToken(array("id" => $username));
 	}
 
 	function set_login_session($user_id, $username, $salted_password) {
