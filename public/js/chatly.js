@@ -46,15 +46,15 @@
 		var hashObject = getDeparamedHash();
 		state.currentRoom = hashObject.room;
 		state.currentContactRoom = hashObject.contact;
-
-		if (window.location.hash) {
-			if (state.currentRoom) {
-				chat.joinRoom(hashObject.room);
-				$('#contact-list > [data-room="' + hashObject.room + '"]')
-					.addClass('active');
-				$('#chat-rooms > [data-room="' + hashObject.room + '"]')
-					.addClass('active');
-			}
+		
+		if (state.currentRoom) {
+			chat.joinRoom(state.currentRoom);
+			$('#chat-rooms > [data-room="' + state.currentRoom + '"]')
+				.addClass('active');
+		} else if (state.currentContactRoom) {
+			chat.joinContactRoom(state.currentContactRoom);
+			$('#contact-list > [data-contact="' + state.currentContactRoom + '"]')
+				.addClass('active');
 		} else {
 			chat.leaveCurrentRoom();
 		}
@@ -190,7 +190,7 @@
 			)
 		;
 
-		console.log(state.currentRoom);
+		// Highlight current room
 		if (newContact.confirmationState === state.currentRoom) {
 			contactElem.addClass('active');
 		}
@@ -198,9 +198,8 @@
 		// Handle contact state change
 		var handleStateChange = function (loggedIn, confirmed) {
 			handleContactStateChanged({
-				loggedIn: loggedIn,
-				confirmed: confirmed,
-				statusElem: contactStatus,
+				contact:     newContact,
+				statusElem:  contactStatus,
 				confirmElem: confirmElements,
 				contactElem: contactElem
 			});
@@ -219,13 +218,7 @@
 		newContact.on('removed', handleContactRemoved);
 
 		// Set first state
-		handleContactStateChanged({
-			loggedIn: newContact.isLoggedIn,
-			confirmed: newContact.confirmationState,
-			statusElem: contactStatus,
-			confirmElem: confirmElements,
-			contactElem: contactElem
-		});
+		handleStateChange();
 	}
 
 	// Change the contact's appearance on a state change
@@ -233,23 +226,22 @@
 		var statusElem  = opts.statusElem;
 		var confirmElem = opts.confirmElem;
 		var contactElem = opts.contactElem;
-		var loggedIn    = opts.loggedIn;
-		var confirmed   = opts.confirmed;
+		var contact     = opts.contact;
 
-		if (confirmed === "sent") {
+		if (contact.state === "sent") {
 			confirmElem.remove();
 			statusElem.attr({class: "glyphicon glyphicon-question-sign status-offline"});
-		} else if (confirmed === false) {
+		} else if (contact.state === false) {
 			statusElem.attr({class: "glyphicon glyphicon-question-sign status-unknown"});
 			contactElem.append(confirmElem);
-		} else if (confirmed) {
+		} else if (contact.state) {
 			confirmElem.remove();
 			contactElem.attr({
-				href       : '#' + $.param({room: confirmed}),
-				'data-room': confirmed
+				href          : '#' + $.param({contact: contact.username}),
+				'data-contact': contact.username
 			});
 
-			if (loggedIn) {
+			if (contact.loggedIn) {
 				statusElem.attr({class: "glyphicon glyphicon-ok-sign status-online"});
 			} else {
 				statusElem.attr({class: "glyphicon glyphicon-minus-sign status-offline"});
@@ -266,6 +258,12 @@
 				'data-room': newRoom.roomId
 			})
 		;
+
+		// Highlight current room
+		var currentRoom = getDeparamedHash().room;
+		if (newRoom.roomId === currentRoom) {
+			roomElem.addClass('active');
+		}
 
 		// Change the room name
 		var handleRoomNameChange = function (name) {
