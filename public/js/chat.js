@@ -39,6 +39,17 @@ asEvented.call(Chat.prototype);
 /////////////////////////////////////////////////////////
 // Chat prototype methods
 
+// Get the name of the 1:1 room with this user
+Chat.prototype.getRoomNameWith = function(username) {
+	var roomName;
+	if (this.username < username) {
+		roomName = this.username + '&' + username;
+	} else {
+		roomName = username + '&' + this.username;
+	}
+	return roomName;
+};
+
 // Starts the chat
 Chat.prototype.start = function() {
 	this.getUserToken();
@@ -69,7 +80,8 @@ Chat.prototype.connect = function(username) {
 		if (error) {
 			console.error('Error: unable to login: ' + error);
 		} else {
-			console.log('Expires at: ' + new Date(result.expires * 1000))
+			console.log('Expires at: ' + new Date(result.expires * 1000));
+			self.authenticated = true;
 			self.handleAuthSuccess.bind(self).call();
 		}
 	});
@@ -116,14 +128,26 @@ Chat.prototype.sendFriendRequest = function(username, success, failure) {
 
 // Confirm a friend request
 Chat.prototype.confirmFriendRequest = function(username) {
-	var roomName = new Firebase(this.config.firebaseUrl + "/rooms").push().name();
+	var roomName = this.getRoomNameWith(username);
 
+	var roomData = {
+		type: 'oneContactRoom',
+		users: {}
+	};
+	roomData.users[this.username] = true;
+	roomData.users[username]      = true;
+
+	// Create the user room
+	new Firebase(this.config.firebaseUrl + "/rooms/" + roomName)
+		.set(roomData);
+
+	// Update contact states
 	this.userRef
 		.child('contacts')
 		.child(username)
 		.transaction(function (current_value) {
 			if (current_value === false) {
-				return roomName;
+				return true;
 			} else {
 				return current_value;
 			}
@@ -133,7 +157,7 @@ Chat.prototype.confirmFriendRequest = function(username) {
 	new Firebase(this.config.firebaseUrl + "/users/" + username + "/contacts/" + this.username)
 		.transaction(function (current_value) {
 			if (current_value === "sent") {
-				return roomName;
+				return true;
 			} else {
 				return current_value;
 			}
@@ -161,7 +185,7 @@ Chat.prototype.joinRoom = function(roomId) {
 	// Leave current room
 	this.leaveCurrentRoom();
 
-	if (this.userRef) {
+	if (this.authenticated) {
 		// Join a new room
 		this.roomRef = new Firebase(this.config.firebaseUrl + "/rooms/" + roomId);
 		this.roomRef.child('messages').limit(100).on('child_added', function (snapshot) {
@@ -181,20 +205,8 @@ Chat.prototype.joinRoom = function(roomId) {
 
 // Join a contact chat room
 Chat.prototype.joinContactRoom = function(username) {
-	var self = this;
-
-	// Leave current room
-	this.leaveCurrentRoom();
-
-	if (this.userRef) {
-		// Get the roomId associated wih the specified contact
-		this.userRef.child('contacts').child(username).once('value', function (snapshot) {
-			// Check if the contact is in the contact list
-			if (snapshot.val() && snapshot.val() !== "sent") {
-				// Finally, join the room
-				self.joinRoom(snapshot.val());
-			}
-		});
+	if (this.authenticated) {
+		this.joinRoom(this.getRoomNameWith(username));
 	} else {
 		// Not connected to Firebase yet
 		// Add this job to the queue
@@ -209,6 +221,7 @@ Chat.prototype.joinContactRoom = function(username) {
 Chat.prototype.createRoom = function(name) {
 	var roomData = {
 		name: name,
+		type: 'multipleContactRoom',
 		users: {}
 	};
 	roomData.users[this.username] = true;

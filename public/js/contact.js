@@ -11,9 +11,6 @@ function Contact(opts) {
 
 	this.contactRef = opts.contactRef;
 	this.contactRef.on('value', this.handleConfirmationStateChange.bind(this));
-
-	this.connectionRef = new Firebase(this.parent.config.firebaseUrl + "/users/" + this.username + "/loggedIn");
-	this.connectionRef.on('value', this.handleLoginStateChange.bind(this));
 }
 
 // Add event functionality to Contact
@@ -38,5 +35,12 @@ Contact.prototype.handleLoginStateChange = function(snapshot) {
 
 Contact.prototype.handleConfirmationStateChange = function(snapshot) {
 	this.state = snapshot.val();
+
+	if (this.state === true) {
+		this.connectionRef = new Firebase(this.parent.config.firebaseUrl
+			+ "/users/" + this.username + "/loggedIn");
+		this.connectionRef.on('value', this.handleLoginStateChange.bind(this));
+	}
+
 	this.trigger('stateChanged', this.isLoggedIn, this.state);
 };

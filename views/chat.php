@@ -10,8 +10,6 @@
 
 					<form id="create-room-form" class="collapse" onsubmit="chatly.submitCreateRoom($(this)); return false;">
 						<input class="form-control" name="roomname" type="text" placeholder="Room name" autocomplete="off"></input>
-						<ul class="parsley-error-list">
-						</ul>
 					</form>
 					
 					<div id="chat-rooms" class="sidebar-list in">
@@ -24,8 +22,6 @@
 
 					<form id="add-contact-form" class="collapse" onsubmit="chatly.submitAddContact($(this)); return false;">
 						<input class="form-control" name="username" type="text" placeholder="Username" autocomplete="off"></input>
-						<ul class="parsley-error-list">
-						</ul>
 					</form>
 
 					<div id="contact-list" class="sidebar-list in">

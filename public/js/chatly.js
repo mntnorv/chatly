@@ -139,13 +139,18 @@
 	// and adds a parsley-error class to the input
 	function setInputError (input, error) {
 		input.addClass('parsley-error');
-		input.after(
-			$('<div class="parsley-error-list"></div>').html(
-				$('<li></li>').append(
-					document.createTextNode(error)
-				)
-			)
-		);
+
+		var errorElem = $('<li></li>').append(document.createTextNode(error));
+
+		var errorListElem = input.next('.parsley-error-list');
+		if (errorListElem.length > 0) {
+			errorListElem.html('');
+			errorListElem.append(errorElem);
+		} else {
+			errorListElem = $('<ul class="parsley-error-list"></ul>');
+			errorListElem.append(errorElem);
+			input.after(errorListElem);
+		}
 	}
 
 	// Removes all errors in a form
@@ -191,7 +196,7 @@
 		;
 
 		// Highlight current room
-		if (newContact.username === state.currentUserRoom) {
+		if (newContact.username === state.currentContactRoom) {
 			contactElem.addClass('active');
 		}
 
@@ -207,6 +212,9 @@
 
 		// Handle contact removal
 		var handleContactRemoved = function () {
+			if (state.currentContactRoom === newContact.username) {
+				window.location.hash = '';
+			}
 			contactElem.remove();
 		};
 
@@ -234,14 +242,14 @@
 		} else if (contact.state === false) {
 			statusElem.attr({class: "glyphicon glyphicon-question-sign status-unknown"});
 			contactElem.append(confirmElem);
-		} else if (contact.state) {
+		} else if (contact.state === true) {
 			confirmElem.remove();
 			contactElem.attr({
 				href          : '#' + $.param({contact: contact.username}),
 				'data-contact': contact.username
 			});
 
-			if (contact.loggedIn) {
+			if (contact.isLoggedIn) {
 				statusElem.attr({class: "glyphicon glyphicon-ok-sign status-online"});
 			} else {
 				statusElem.attr({class: "glyphicon glyphicon-minus-sign status-offline"});
