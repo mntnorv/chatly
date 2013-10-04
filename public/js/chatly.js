@@ -16,8 +16,12 @@
 	// Start the chat engine!
 	chat.start();
 
-	// The last message in the room was sent by this user
-	var lastUsername;
+	// The current chat state
+	var state = {
+		lastUsername: null,
+		currentRoom: null,
+		currentContactRoom: null
+	}
 
 	/////////////////////////////////////////////////////////
 	// Chat method proxies
@@ -39,10 +43,12 @@
 		$('#chat-rooms > .active')
 			.removeClass('active');
 
-		if (window.location.hash) {
-			var hashObject = getDeparamedHash();
+		var hashObject = getDeparamedHash();
+		state.currentRoom = hashObject.room;
+		state.currentContactRoom = hashObject.contact;
 
-			if (hashObject.room) {
+		if (window.location.hash) {
+			if (state.currentRoom) {
 				chat.joinRoom(hashObject.room);
 				$('#contact-list > [data-room="' + hashObject.room + '"]')
 					.addClass('active');
@@ -184,8 +190,8 @@
 			)
 		;
 
-		var currentRoom = getDeparamedHash().room;
-		if (newContact.confirmationState === currentRoom) {
+		console.log(state.currentRoom);
+		if (newContact.confirmationState === state.currentRoom) {
 			contactElem.addClass('active');
 		}
 
@@ -269,7 +275,7 @@
 		// Remove room from HTML and leave if currently
 		// in the room being removed
 		var handleRoomRemoved = function () {
-			if (newRoom.roomId === getDeparamedHash().room) {
+			if (newRoom.roomId === state.currentRoom) {
 				window.location.hash = "";
 			}
 
@@ -292,8 +298,8 @@
 		// Append the sender's username to the chat log if there were no chat
 		// messages before or the last message was from another user
 		var appendUsername = false;
-		if (lastUsername) {
-			if (lastUsername !== message.from) {
+		if (state.lastUsername) {
+			if (state.lastUsername !== message.from) {
 				appendUsername = true;
 			}
 		} else {
@@ -301,7 +307,7 @@
 		}
 
 		if (appendUsername) {
-			lastUsername = message.from;
+			state.lastUsername = message.from;
 
 			// Create the username element
 			var usernameElem = $('<p class="chat-log-username"></p>')
@@ -330,7 +336,7 @@
 	// Clear all messages from the chat log
 	function handleLeftRoom() {
 		$('#chat-log').html('');
-		lastUsername = null;
+		state.lastUsername = null;
 	}
 
 }(window.chatly = window.chatly || {}, jQuery));
