@@ -38,18 +38,21 @@
 
 	// Handles the hash change event
 	var handleHashChange = function () {
-        var contactList = $('#contact-list');
-        var chatRooms = $('#chat-rooms');
+		var contactList = $('#contact-list');
+		var chatRooms = $('#chat-rooms');
 
 		contactList.children('.active')
 			.removeClass('active');
+
+        chatRooms.children('a > a[data-toggle="modal"]')
+            .remove();
 		chatRooms.children('.active')
 			.removeClass('active');
 
 		var hashObject = getDeparamedHash();
 		state.currentRoom = hashObject.room;
 		state.currentContactRoom = hashObject.contact;
-		
+
 		if (state.currentRoom) {
 			chat.joinRoom(state.currentRoom);
 			chatRooms.children('[data-room="' + state.currentRoom + '"]')
@@ -163,6 +166,35 @@
 	}
 
 	/////////////////////////////////////////////////////////
+	// Add-contacts-to-room-modal-specific functions
+
+	function addContactsToModal(contactList, container) {
+		for (var username in contactList) {
+			if(contactList.hasOwnProperty(username)) {
+				container.append(
+                    $('<label><input type="checkbox" /></label>')
+                        .attr({'data-username': username})
+                        .append(document.createTextNode(username))
+				);
+			}
+		}
+	}
+
+	$(window).load(function() {
+		var contactsModal = $('#roomAddContactsModal');
+        var contactContainer = contactsModal.find('.modal-contact-list');
+
+		contactsModal.on('show.bs.modal', function() {
+            var contacts = chat.getContacts();
+		    addContactsToModal(contacts, contactContainer);
+		});
+
+		contactsModal.on('hidden.bs.modal', function() {
+		    contactContainer.html('');
+		});
+	});
+
+	/////////////////////////////////////////////////////////
 	// Chat input specific functions
 	chatly.submitChatMessage = function (form) {
 		var inputElem = form.find('[name="message"]');
@@ -178,7 +210,7 @@
 	function handleContactAdded(newContact) {
 		// Create a new contact element
 		var contactStatus = $('<span class="glyphicon glyphicon-question-sign status-offline"></span>');
-		
+
 		var contactElem = $('<a class="item"></a>')
 			.append(contactStatus)
 			.append(document.createTextNode(" " + newContact.username))

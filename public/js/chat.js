@@ -63,7 +63,7 @@ Chat.prototype.getRoomNameWith = function(username) {
 
 /**
  * Get the current list of contacts
- * @returns {{[username]: Contact}} A list of contacts
+ * @returns {{?: Contact}} A list of contacts
  */
 Chat.prototype.getContacts = function() {
 	return this.contacts;

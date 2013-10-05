@@ -6,12 +6,6 @@
 				<h4 class="modal-title">Add contacts to room</h4>
 			</div>
 			<div class="modal-body modal-contact-list">
-				<label><input type="checkbox" />Contact 1</label>
-				<label><input type="checkbox" />Contact 1</label>
-				<label><input type="checkbox" />Contact 1</label>
-				<label><input type="checkbox" />Contact 1</label>
-				<label><input type="checkbox" />Contact 1</label>
-				<label><input type="checkbox" />Contact 1</label>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

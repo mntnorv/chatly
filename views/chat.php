@@ -12,8 +12,16 @@
 						<input class="form-control" name="roomname" type="text" placeholder="Room name" autocomplete="off" />
 					</form>
 					
-					<div id="chat-rooms" class="sidebar-list in">
+					<div id="chat-rooms" class="sidebar-list">
 					</div>
+
+                    <div>
+                        <span class="sidebar-title">People in room</span>
+                        <button class="btn btn-success btn-xs pull-right" data-toggle="modal" data-target="#roomAddContactsModal">Add</button>
+                    </div>
+
+                    <div id="people-in-room" class="sidebar-list">
+                    </div>
 
 					<div>
 						<span class="sidebar-title">Contacts</span>
@@ -24,7 +32,7 @@
 						<input class="form-control" name="username" type="text" placeholder="Username" autocomplete="off" />
 					</form>
 
-					<div id="contact-list" class="sidebar-list in">
+					<div id="contact-list" class="sidebar-list">
 					</div>
 				</div>
 			</div>

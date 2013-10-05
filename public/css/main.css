@@ -56,6 +56,10 @@
 	background-color: #428BCA;
 }
 
+.sidebar-list a.item.active *{
+    color: #eee;
+}
+
 .sidebar-list a.item.active:hover {
 	background-color: #3276B1;
 }
