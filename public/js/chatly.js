@@ -8,10 +8,11 @@
 	var chat = new Chat();
 
 	// Set chat callbacks
-	chat.on('contactAdded',   handleContactAdded);
-	chat.on('roomAdded',      handleRoomAdded);
-	chat.on('leftRoom',       handleLeftRoom);
-	chat.on('gotChatMessage', handleChatMessage);
+	chat.on('contactAdded',     handleContactAdded);
+    chat.on('roomContactAdded', handleRoomContactAdded);
+	chat.on('roomAdded',        handleRoomAdded);
+	chat.on('leftRoom',         handleLeftRoom);
+	chat.on('gotChatMessage',   handleChatMessage);
 
 	// Start the chat engine!
 	chat.start();
@@ -295,6 +296,40 @@
 	}
 
     /**
+     * Add a new contact to the "People in room" section in the sidebar
+     * @param {Contact} newContact - the contact to add
+     */
+    function handleRoomContactAdded(newContact) {
+        // Create a new contact element
+        var contactElem = chatly.createContactElement({
+            username: newContact.username
+        });
+
+        // Handle contact state change
+        var handleStateChange = function () {
+            handleRoomContactStateChanged({
+                contact:     newContact,
+                contactElem: contactElem
+            });
+        };
+
+        // Handle contact removal
+        var handleContactRemoved = function () {
+            contactElem.container.remove();
+        };
+
+        // Add new contact element to HTML
+        $('#people-in-room').append(contactElem.container);
+
+        // Set contact event handlers
+        newContact.on('stateChanged', handleStateChange);
+        newContact.on('removed', handleContactRemoved);
+
+        // Set first state
+        handleStateChange();
+    }
+
+    /**
      * Change a contact's appearance according to the current state
      * @param {object} opts
      * @param {object} opts.confirmElem
@@ -328,6 +363,28 @@
 			}
 		}
 	}
+
+    /**
+     * Change a contact's appearance according to the current state
+     * @param {object} opts
+     * @param {object} opts.contactElem
+     * @param {object} opts.contactElem.container - the contact element
+     * @param {Contact} opts.contact - the contact to get the state from
+     */
+    function handleRoomContactStateChanged(opts) {
+        var contactElem = opts.contactElem;
+        var contactObj  = opts.contact;
+
+        if (contactObj.state === "sent" || contactObj.state === false) {
+            chatly.setContactState(contactElem.status, chatly.contactState.UNKNOWN);
+        } else if (contactObj.state === true) {
+            if (contactObj.isLoggedIn) {
+                chatly.setContactState(contactElem.status, chatly.contactState.ONLINE);
+            } else {
+                chatly.setContactState(contactElem.status, chatly.contactState.OFFLINE);
+            }
+        }
+    }
 
     /**
      * Add a room to the sidebar room list
@@ -418,6 +475,7 @@
      */
 	function handleLeftRoom() {
 		$('#chat-log').html('');
+        $('#people-in-room').html('');
 		state.lastUsername = null;
 	}
 

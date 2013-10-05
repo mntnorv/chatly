@@ -254,9 +254,9 @@ Chat.prototype.joinRoom = function(roomId) {
 			self.trigger('gotChatMessage', snapshot.val());
 		});
 
-        this.roomRef.child('contacts').on('child_added',
+        this.roomRef.child('users').on('child_added',
             this.handleRoomContactAdded.bind(this));
-        this.roomRef.child('contacts').on('child_removed',
+        this.roomRef.child('users').on('child_removed',
             this.handleRoomContactRemoved.bind(this));
 
 		this.trigger('joinedRoom', roomId);
@@ -455,7 +455,7 @@ Chat.prototype.handleContactRemoved = function(snapshot) {
  * @param snapshot - the Firebase snapshot of the new contact
  */
 Chat.prototype.handleRoomContactAdded = function(snapshot) {
-    if (snapahot.name() !== this.username) {
+    if (snapshot.name() !== this.username) {
         var newContact = new Contact({
             parent: this,
             username: snapshot.name(),

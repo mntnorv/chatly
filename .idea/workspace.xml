@@ -2,15 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="67ccdca6-f9bb-42f0-815b-93b12fbabafa" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/chat.js" afterPath="$PROJECT_DIR$/public/js/chat.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/chatly.js" afterPath="$PROJECT_DIR$/public/js/chatly.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/room.js" afterPath="$PROJECT_DIR$/public/js/room.js" />
     </list>
     <ignored path="chatly.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="67ccdca6-f9bb-42f0-815b-93b12fbabafa" time="1380988535019" ignored="false" />
-    <file path="/chat.js" changelist="67ccdca6-f9bb-42f0-815b-93b12fbabafa" time="1380982864797" ignored="false" />
+    <file path="/chat.js" changelist="67ccdca6-f9bb-42f0-815b-93b12fbabafa" time="1380993541166" ignored="false" />
     <file path="/index.php" changelist="67ccdca6-f9bb-42f0-815b-93b12fbabafa" time="1380969396025" ignored="false" />
-    <file path="/chatly.js" changelist="67ccdca6-f9bb-42f0-815b-93b12fbabafa" time="1380989858835" ignored="false" />
+    <file path="/chatly.js" changelist="67ccdca6-f9bb-42f0-815b-93b12fbabafa" time="1380993601832" ignored="false" />
     <file path="/room.js" changelist="67ccdca6-f9bb-42f0-815b-93b12fbabafa" time="1380977823465" ignored="false" />
     <file path="/main.css" changelist="67ccdca6-f9bb-42f0-815b-93b12fbabafa" time="1380980872948" ignored="false" />
     <file path="/chat.php" changelist="67ccdca6-f9bb-42f0-815b-93b12fbabafa" time="1380981091054" ignored="false" />
@@ -45,7 +45,7 @@
       <file leaf-file-name="chat.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/js/chat.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="443" column="37" selection-start="10651" selection-end="10651" vertical-scroll-proportion="0.0">
+            <state line="457" column="44" selection-start="11090" selection-end="11090" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -63,7 +63,7 @@
       <file leaf-file-name="chatly.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/js/chatly.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="416" column="46" selection-start="12008" selection-end="12008" vertical-scroll-proportion="8.811594">
+            <state line="309" column="43" selection-start="8790" selection-end="8790" vertical-scroll-proportion="0.44481605">
               <folding />
             </state>
           </provider>
@@ -81,7 +81,7 @@
       <file leaf-file-name="chat.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/chat.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="28" selection-start="234" selection-end="234" vertical-scroll-proportion="-4.071429">
+            <state line="22" column="24" selection-start="1009" selection-end="1009" vertical-scroll-proportion="-14.928572">
               <folding />
             </state>
           </provider>
@@ -129,10 +129,10 @@
         <option value="$PROJECT_DIR$/views/chat.php" />
         <option value="$PROJECT_DIR$/views/modal_room_contacts.php" />
         <option value="$PROJECT_DIR$/public/js/contact.js" />
-        <option value="$PROJECT_DIR$/public/js/chat.js" />
         <option value="$PROJECT_DIR$/views/assets.php" />
         <option value="$PROJECT_DIR$/public/js/html-objects.js" />
         <option value="$PROJECT_DIR$/public/js/room.js" />
+        <option value="$PROJECT_DIR$/public/js/chat.js" />
         <option value="$PROJECT_DIR$/public/js/chatly.js" />
       </list>
     </option>
@@ -343,7 +343,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -470,37 +470,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="19" selection-start="339" selection-end="339" vertical-scroll-proportion="-8.142858">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/css/main.css">
       <provider selected="true" editor-type-id="text-editor">
         <state line="59" column="16" selection-start="782" selection-end="782" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/chat.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="28" selection-start="234" selection-end="234" vertical-scroll-proportion="-4.071429">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/modal_room_contacts.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="55" selection-start="355" selection-end="355" vertical-scroll-proportion="-4.75">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/chat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="443" column="37" selection-start="10651" selection-end="10651" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -519,13 +491,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/html-objects.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="76" selection-start="2164" selection-end="2164" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/room.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="5" column="15" selection-start="91" selection-end="91" vertical-scroll-proportion="0.10590859">
@@ -533,9 +498,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="19" selection-start="339" selection-end="339" vertical-scroll-proportion="-8.142858">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/modal_room_contacts.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="55" selection-start="355" selection-end="355" vertical-scroll-proportion="-4.75">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/chat.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="24" selection-start="1009" selection-end="1009" vertical-scroll-proportion="-14.928572">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/html-objects.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="63" column="76" selection-start="2164" selection-end="2164" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/chat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="457" column="44" selection-start="11090" selection-end="11090" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/chatly.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="416" column="46" selection-start="12008" selection-end="12008" vertical-scroll-proportion="8.811594">
+        <state line="309" column="43" selection-start="8790" selection-end="8790" vertical-scroll-proportion="0.44481605">
           <folding />
         </state>
       </provider>
