@@ -27,6 +27,9 @@ function Chat(opts) {
 	// Contact array
 	this.contacts = {};
 
+    // Users in the room
+    this.roomUsers = {};
+
 	// User room array
 	this.userRooms = {};
 
@@ -251,6 +254,11 @@ Chat.prototype.joinRoom = function(roomId) {
 			self.trigger('gotChatMessage', snapshot.val());
 		});
 
+        this.roomRef.child('contacts').on('child_added',
+            this.handleRoomContactAdded.bind(this));
+        this.roomRef.child('contacts').on('child_removed',
+            this.handleRoomContactRemoved.bind(this));
+
 		this.trigger('joinedRoom', roomId);
 	} else {
 		// Not connected to Firebase yet
@@ -320,9 +328,17 @@ Chat.prototype.sendToRoom = function(message) {
 Chat.prototype.leaveCurrentRoom = function() {
 	if (this.roomRef) {
 		this.roomRef.child('messages').off();
+        this.roomRef.child('contacts').off();
 		this.roomRef.off();
 		this.roomRef = null;
 	}
+
+    for (var username in this.roomUsers) {
+        if (this.roomUsers.hasOwnProperty(username)) {
+            this.roomUsers[username].stop();
+            delete this.roomUsers[username];
+        }
+    }
 
 	this.trigger('leftRoom');
 };
@@ -420,7 +436,6 @@ Chat.prototype.handleContactAdded = function(snapshot) {
 	});
 
 	this.contacts[snapshot.name()] = newContact;
-
 	this.trigger('contactAdded', newContact);
 };
 
@@ -433,6 +448,34 @@ Chat.prototype.handleContactRemoved = function(snapshot) {
 	delete this.contacts[snapshot.name()];
 	contact.stop();
 	contact.trigger('removed');
+};
+
+/**
+ * Handle a new room contact added event
+ * @param snapshot - the Firebase snapshot of the new contact
+ */
+Chat.prototype.handleRoomContactAdded = function(snapshot) {
+    if (snapahot.name() !== this.username) {
+        var newContact = new Contact({
+            parent: this,
+            username: snapshot.name(),
+            contactRef: snapshot.ref()
+        });
+
+        this.roomUsers[snapshot.name()] = newContact;
+        this.trigger('roomContactAdded', newContact);
+    }
+};
+
+/**
+ * Handle a room contact removed event
+ * @param snapshot - the Firebase snapshot of the removed contact
+ */
+Chat.prototype.handleRoomContactRemoved = function(snapshot) {
+    var contact = this.roomUsers[snapshot.name()];
+    delete this.roomUsers[snapshot.name()];
+    contact.stop();
+    contact.trigger('removed');
 };
 
 /**
