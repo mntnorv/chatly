@@ -14,3 +14,4 @@
 <script type="text/javascript" src="/js/contact.js"></script>
 <script type="text/javascript" src="/js/room.js"></script>
 <script type="text/javascript" src="/js/chat.js"></script>
+<script type="text/javascript" src="/js/html-objects.js"></script>

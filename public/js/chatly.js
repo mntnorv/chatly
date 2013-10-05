@@ -172,9 +172,7 @@
 		for (var username in contactList) {
 			if(contactList.hasOwnProperty(username)) {
 				container.append(
-                    $('<label><input type="checkbox" /></label>')
-                        .attr({'data-username': username})
-                        .append(document.createTextNode(username))
+                    chatly.createCheckableContactElement({username: username}).container
 				);
 			}
 		}
@@ -209,38 +207,24 @@
 	// Add a new contact to the HTML
 	function handleContactAdded(newContact) {
 		// Create a new contact element
-		var contactStatus = $('<span class="glyphicon glyphicon-question-sign status-offline"></span>');
+        var contactElem = chatly.createContactElement({
+            username: newContact.username
+        });
 
-		var contactElem = $('<a class="item"></a>')
-			.append(contactStatus)
-			.append(document.createTextNode(" " + newContact.username))
-		;
-
-		var confirmElements = $('<span class="pull-right"></span>')
-			.append($('<a>Confirm</a>')
-				.attr({
-					onclick: 'chatly.confirmRequest("' + newContact.username + '");'
-				})
-			)
-			.append(document.createTextNode('/'))
-			.append($('<a>Decline</a>')
-				.attr({
-					onclick: 'chatly.removeContact("' + newContact.username + '");'
-				})
-			)
-		;
+		var confirmElem = chatly.createContactConfirmElements({
+            username: newContact.username
+        });
 
 		// Highlight current room
 		if (newContact.username === state.currentContactRoom) {
-			contactElem.addClass('active');
+			contactElem.container.addClass('active');
 		}
 
 		// Handle contact state change
 		var handleStateChange = function () {
 			handleContactStateChanged({
 				contact:     newContact,
-				statusElem:  contactStatus,
-				confirmElem: confirmElements,
+				confirmElem: confirmElem,
 				contactElem: contactElem
 			});
 		};
@@ -250,11 +234,11 @@
 			if (state.currentContactRoom === newContact.username) {
 				window.location.hash = '';
 			}
-			contactElem.remove();
+			contactElem.container.remove();
 		};
 
 		// Add new contact element to HTML
-		$('#contact-list').append(contactElem);
+		$('#contact-list').append(contactElem.container);
 
 		// Set contact event handlers
 		newContact.on('stateChanged', handleStateChange);
@@ -266,28 +250,27 @@
 
 	// Change the contact's appearance on a state change
 	function handleContactStateChanged(opts) {
-		var statusElem  = opts.statusElem;
 		var confirmElem = opts.confirmElem;
 		var contactElem = opts.contactElem;
-		var contact     = opts.contact;
+		var contactObj  = opts.contact;
 
-		if (contact.state === "sent") {
-			confirmElem.remove();
-			statusElem.attr({class: "glyphicon glyphicon-question-sign status-offline"});
-		} else if (contact.state === false) {
-			statusElem.attr({class: "glyphicon glyphicon-question-sign status-unknown"});
+		if (contactObj.state === "sent") {
+			confirmElem.container.remove();
+            chatly.setContactState(contactElem.status, chatly.contactState.UNKNOWN);
+		} else if (contactObj.state === false) {
+            chatly.setContactState(contactElem.status, chatly.contactState.REQUEST);
 			contactElem.append(confirmElem);
-		} else if (contact.state === true) {
-			confirmElem.remove();
-			contactElem.attr({
-				href          : '#' + $.param({contact: contact.username}),
-				'data-contact': contact.username
+		} else if (contactObj.state === true) {
+			confirmElem.container.remove();
+			contactElem.container.attr({
+				href          : '#' + $.param({contact: contactObj.username}),
+				'data-contact': contactObj.username
 			});
 
-			if (contact.isLoggedIn) {
-				statusElem.attr({class: "glyphicon glyphicon-ok-sign status-online"});
+			if (contactObj.isLoggedIn) {
+                chatly.setContactState(contactElem.status, chatly.contactState.ONLINE);
 			} else {
-				statusElem.attr({class: "glyphicon glyphicon-minus-sign status-offline"});
+                chatly.setContactState(contactElem.status, chatly.contactState.OFFLINE);
 			}
 		}
 	}
@@ -295,22 +278,20 @@
 	// Add a new room to HTML
 	function handleRoomAdded(newRoom) {
 		// Create the room's HTML element
-		var roomElem = $('<a class="item"></a>')
-			.attr({
-				href       : '#' + $.param({room: newRoom.roomId}),
-				'data-room': newRoom.roomId
-			})
-		;
+        var roomElem = chatly.createRoomElement({
+            id: newRoom.roomId,
+            name: '(loading)'
+        });
 
 		// Highlight current room
 		var currentRoom = getDeparamedHash().room;
 		if (newRoom.roomId === currentRoom) {
-			roomElem.addClass('active');
+			roomElem.container.addClass('active');
 		}
 
 		// Change the room name
 		var handleRoomNameChange = function (name) {
-			roomElem.html(document.createTextNode(name));
+			roomElem.name.html(document.createTextNode(name));
 		};
 
 		// Remove room from HTML and leave if currently
@@ -320,7 +301,7 @@
 				window.location.hash = "";
 			}
 
-			roomElem.remove();
+			roomElem.container.remove();
 		};
 
 		// Set new room handlers
@@ -328,7 +309,7 @@
 		newRoom.on('removed',     handleRoomRemoved);
 
 		// Add new contact element to HTML
-		$('#chat-rooms').append(roomElem);
+		$('#chat-rooms').append(roomElem.container);
 	}
 
 	// Add a new chat message to HTML
@@ -360,18 +341,13 @@
 		}
 
 		// Create the message element
-		var timeElem = $('<p class="chat-message-time pull-right"></p>')
-			.append(document.createTextNode(new Date(message.time).format('H:i')));
-
-		var messageElem = $('<p class="chat-message-text"></p>')
-			.append(document.createTextNode(message.data));
-
-		var messageDivElem = $('<div class="chat-message"></div>')
-			.append(timeElem)
-			.append(messageElem);
+        var messageElem = chatly.createMessageElement({
+            data: message.data,
+            time: message.time
+        });
 
 		// Append the message element to the chat log
-		chatLog.append(messageDivElem);
+		chatLog.append(messageElem.container);
 	}
 
 	// Clear all messages from the chat log
