@@ -16,7 +16,12 @@
 	// Start the chat engine!
 	chat.start();
 
-	// The current chat state
+    /**
+     * Describes the current chat state
+     * @property {string} lastUsername - name of the user the last message was received from
+     * @property {string} currentRoom - the id of the current room
+     * @property {string} currentContactRoom - name of the contact with which a one-contact room is joined
+     */
 	var state = {
 		lastUsername: null,
 		currentRoom: null,
@@ -31,12 +36,17 @@
 	/////////////////////////////////////////////////////////
 	// URL hash change handling
 
-	// Get the hash as an object
+    /**
+     * Get the current hash, deparamed
+     * @returns {object}
+     */
 	function getDeparamedHash() {
 		return $.deparam(window.location.hash.substring(1));
 	}
 
-	// Handles the hash change event
+    /**
+     * Handle the hash change event
+     */
 	var handleHashChange = function () {
 		var contactList = $('#contact-list');
 		var chatRooms = $('#chat-rooms');
@@ -74,7 +84,11 @@
 	/////////////////////////////////////////////////////////
 	// Sidebar-form-specific functions
 
-	// Init a sidebar form with one input
+    /**
+     * Initialize a sidebar form with one input
+     * @param {string} formSelector - selector of the form to initialize
+     * @param {string} inputSelector - selector of the one input, relative to the form
+     */
 	function initSidebarForm(formSelector, inputSelector) {
 		var formElem = $(formSelector);
 		var inputElem = formElem.children(inputSelector);
@@ -107,7 +121,11 @@
 		initSidebarForm('#create-room-form', '[name="roomname"]');
 	});
 
-	// Submit the add contact form
+    /**
+     * Submit the add contact form.
+     * Sends a friend request.
+     * @param form - the form to submit
+     */
 	chatly.submitAddContact = function (form) {
 		var newContactUsername = form.children('[name="username"]').val();
 
@@ -126,7 +144,11 @@
 		);
 	};
 
-	// Submit the create room form
+    /**
+     * Submit the create room form.
+     * Creates a new room.
+     * @param form - the form to submit
+     */
 	chatly.submitCreateRoom = function (form) {
 		var newRoomName = form.children('[name="roomname"]').val();
 
@@ -141,8 +163,13 @@
 		}
 	};
 
-	// Adds a div containing an error after the specified input
-	// and adds a parsley-error class to the input
+    /**
+     * Set a validation error on an input.
+     * Adds a div containing an error after the specified input and adds a parsley-error class
+     * to the input
+     * @param input - the input to add the error to
+     * @param {string} error - the error message
+     */
 	function setInputError (input, error) {
 		input.addClass('parsley-error');
 
@@ -159,7 +186,12 @@
 		}
 	}
 
-	// Removes all errors in a form
+    /**
+     * Remove all validation errors from a form.
+     * Removes all elements with the .parsley-error-list class and removes .parsley-error classes from
+     * all of the inputs.
+     * @param form - the form to remove errors from
+     */
 	function removeFormErrors (form) {
 		form.find('.parsley-error').removeClass('parsley-error');
 		form.find('.parsley-error-list').remove();
@@ -168,6 +200,11 @@
 	/////////////////////////////////////////////////////////
 	// Add-contacts-to-room-modal-specific functions
 
+    /**
+     * Add a list of checkable contacts to HTML
+     * @param {Contact[]} contactList - the list of contacts to add
+     * @param container - the container to add the contacts to
+     */
 	function addContactsToModal(contactList, container) {
 		for (var username in contactList) {
 			if(contactList.hasOwnProperty(username)) {
@@ -194,6 +231,12 @@
 
 	/////////////////////////////////////////////////////////
 	// Chat input specific functions
+
+    /**
+     * Submit the chat message form.
+     * Sends the message to the current room.
+     * @param form - the form to submit
+     */
 	chatly.submitChatMessage = function (form) {
 		var inputElem = form.find('[name="message"]');
 		var message = inputElem.val();
@@ -204,7 +247,10 @@
 	/////////////////////////////////////////////////////////
 	// Chat callback handlers
 
-	// Add a new contact to the HTML
+    /**
+     * Add a new contact to the sidebar contact list
+     * @param {Contact} newContact - the contact to add
+     */
 	function handleContactAdded(newContact) {
 		// Create a new contact element
         var contactElem = chatly.createContactElement({
@@ -248,7 +294,15 @@
 		handleStateChange();
 	}
 
-	// Change the contact's appearance on a state change
+    /**
+     * Change a contact's appearance according to the current state
+     * @param {object} opts
+     * @param {object} opts.confirmElem
+     * @param {object} opts.confirmElem.container - the confirmation element
+     * @param {object} opts.contactElem
+     * @param {object} opts.contactElem.container - the contact element
+     * @param {Contact} opts.contact - the contact to get the state from
+     */
 	function handleContactStateChanged(opts) {
 		var confirmElem = opts.confirmElem;
 		var contactElem = opts.contactElem;
@@ -275,7 +329,10 @@
 		}
 	}
 
-	// Add a new room to HTML
+    /**
+     * Add a room to the sidebar room list
+     * @param {UserRoom} newRoom - the room to add
+     */
 	function handleRoomAdded(newRoom) {
 		// Create the room's HTML element
         var roomElem = chatly.createRoomElement({
@@ -312,7 +369,13 @@
 		$('#chat-rooms').append(roomElem.container);
 	}
 
-	// Add a new chat message to HTML
+    /**
+     * Add a new message to the main chat window
+     * @param {object} message
+     * @param {string} message.data - the message string
+     * @param {string} message.from - the name of the sender
+     * @param {number} message.time - the time this message was sent
+     */
 	function handleChatMessage(message) {
 		// Get chat log container
 		var chatLog = $('#chat-log');
@@ -350,7 +413,9 @@
 		chatLog.append(messageElem.container);
 	}
 
-	// Clear all messages from the chat log
+    /**
+     * Clear all messages from the chat window
+     */
 	function handleLeftRoom() {
 		$('#chat-log').html('');
 		state.lastUsername = null;
