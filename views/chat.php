@@ -9,7 +9,7 @@
 					</div>
 
 					<form id="create-room-form" class="collapse" onsubmit="chatly.submitCreateRoom($(this)); return false;">
-						<input class="form-control" name="roomname" type="text" placeholder="Room name" autocomplete="off"></input>
+						<input class="form-control" name="roomname" type="text" placeholder="Room name" autocomplete="off" />
 					</form>
 					
 					<div id="chat-rooms" class="sidebar-list in">
@@ -21,7 +21,7 @@
 					</div>
 
 					<form id="add-contact-form" class="collapse" onsubmit="chatly.submitAddContact($(this)); return false;">
-						<input class="form-control" name="username" type="text" placeholder="Username" autocomplete="off"></input>
+						<input class="form-control" name="username" type="text" placeholder="Username" autocomplete="off" />
 					</form>
 
 					<div id="contact-list" class="sidebar-list in">
@@ -50,5 +50,7 @@
 		</div>
 	</div>
 </div>
+
+<?php include 'modal_room_contacts.php'; ?>
 
 <script type="text/javascript" src="/js/chatly.js"></script>

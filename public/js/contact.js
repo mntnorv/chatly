@@ -42,5 +42,5 @@ Contact.prototype.handleConfirmationStateChange = function(snapshot) {
 		this.connectionRef.on('value', this.handleLoginStateChange.bind(this));
 	}
 
-	this.trigger('stateChanged', this.isLoggedIn, this.state);
+	this.trigger('stateChanged');
 };

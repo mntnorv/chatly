@@ -1,11 +1,11 @@
 .navbar {
-	margin-bottom: 0px;
+	margin-bottom: 0;
 }
 
 .alert {
 	position: absolute;
 	width: 100%;
-	margin-bottom: 0px;
+	margin-bottom: 0;
 	z-index: 1;
 }
 
@@ -58,6 +58,30 @@
 
 .sidebar-list a.item.active:hover {
 	background-color: #3276B1;
+}
+
+/*
+| Modal contact list
+*/
+
+.modal-contact-list > * {
+	overflow: hidden;
+	display: block;
+
+	border-radius: 4px;
+	padding: 2px 4px 2px 4px;
+}
+
+.modal-contact-list *:hover {
+	background-color: #f5f5f5;
+}
+
+.modal-contact-list label {
+	font-weight: normal;
+}
+
+.modal-contact-list label > input[type=checkbox] {
+	margin-right: 4px;
 }
 
 /*

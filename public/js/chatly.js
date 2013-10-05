@@ -21,7 +21,7 @@
 		lastUsername: null,
 		currentRoom: null,
 		currentContactRoom: null
-	}
+	};
 
 	/////////////////////////////////////////////////////////
 	// Chat method proxies
@@ -38,9 +38,12 @@
 
 	// Handles the hash change event
 	var handleHashChange = function () {
-		$('#contact-list > .active')
+        var contactList = $('#contact-list');
+        var chatRooms = $('#chat-rooms');
+
+		contactList.children('.active')
 			.removeClass('active');
-		$('#chat-rooms > .active')
+		chatRooms.children('.active')
 			.removeClass('active');
 
 		var hashObject = getDeparamedHash();
@@ -49,16 +52,16 @@
 		
 		if (state.currentRoom) {
 			chat.joinRoom(state.currentRoom);
-			$('#chat-rooms > [data-room="' + state.currentRoom + '"]')
+			chatRooms.children('[data-room="' + state.currentRoom + '"]')
 				.addClass('active');
 		} else if (state.currentContactRoom) {
 			chat.joinContactRoom(state.currentContactRoom);
-			$('#contact-list > [data-contact="' + state.currentContactRoom + '"]')
+			contactList.children('[data-contact="' + state.currentContactRoom + '"]')
 				.addClass('active');
 		} else {
 			chat.leaveCurrentRoom();
 		}
-	}
+	};
 
 	// Set the hash change event handler
 	window.onhashchange = handleHashChange;
@@ -107,11 +110,11 @@
 
 		var handleAddContactSuccess = function () {
 			form.collapse('hide');
-		}
+		};
 
 		var handleAddContactFailed = function (message) {
 			setInputError(form.children('[name="username"]'), message);
-		}
+		};
 
 		chat.sendFriendRequest(
 			newContactUsername,
@@ -133,7 +136,7 @@
 				'Room name cannot be empty'
 			);
 		}
-	}
+	};
 
 	// Adds a div containing an error after the specified input
 	// and adds a parsley-error class to the input
@@ -201,7 +204,7 @@
 		}
 
 		// Handle contact state change
-		var handleStateChange = function (loggedIn, confirmed) {
+		var handleStateChange = function () {
 			handleContactStateChanged({
 				contact:     newContact,
 				statusElem:  contactStatus,
