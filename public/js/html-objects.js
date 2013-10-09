@@ -64,8 +64,11 @@
      * @returns {{container: object}} an object containing the main element.
      */
     chatly.createCheckableContactElement = function (opts) {
-        var contactElem = $('<label><input type="checkbox" /></label>')
-            .attr({'data-username': opts.username})
+        var contactElem = $('<label></label>')
+            .append(
+                $('<input type="checkbox" />')
+                    .attr('data-username', opts.username)
+            )
             .append(document.createTextNode(opts.username));
 
         return {

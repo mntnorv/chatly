@@ -5,11 +5,11 @@
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
 				<h4 class="modal-title">Add contacts to room</h4>
 			</div>
-			<div class="modal-body modal-contact-list">
+			<div class="modal-body modal-contact-list" id="add-contact-list">
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-				<button type="button" class="btn btn-primary" data-dismiss="modal">Add</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="chatly.addContactsToRoom('#add-contact-list input:checked');">Add</button>
 			</div>
 		</div>
 	</div>

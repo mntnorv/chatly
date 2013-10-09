@@ -344,6 +344,18 @@ Chat.prototype.leaveCurrentRoom = function() {
 };
 
 /////////////////////////////////////////////////////////
+// Room contact methods
+
+Chat.prototype.addContactToRoom = function(username) {
+	this.roomRef
+		.child('users').child(username)
+		.set(true);
+
+	new Firebase(this.config.firebaseUrl + "/users/" + username + "/rooms/" + 
+		this.roomRef.name()).set(true);
+};
+
+/////////////////////////////////////////////////////////
 // Chat event handlers
 
 /**

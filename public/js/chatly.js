@@ -164,6 +164,19 @@
 		}
 	};
 
+	/**
+	 * Add contacts to the current room.
+	 * @param {string} listSelector - a selector of the list containing
+	 *   HTML elements with the data-username attribute.
+	 */
+	chatly.addContactsToRoom = function(listSelector) {
+		var list = $(listSelector);
+		list.each(function (index, value) {
+			var username = value.getAttribute('data-username');
+			chat.addContactToRoom(username);
+		});
+	};
+
     /**
      * Set a validation error on an input.
      * Adds a div containing an error after the specified input and adds a parsley-error class
