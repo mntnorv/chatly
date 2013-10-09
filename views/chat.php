@@ -15,13 +15,15 @@
 					<div id="chat-rooms" class="sidebar-list">
 					</div>
 
-                    <div>
-                        <span class="sidebar-title">People in room</span>
-                        <button class="btn btn-success btn-xs pull-right" data-toggle="modal" data-target="#roomAddContactsModal">Add</button>
-                    </div>
+					<div id="people-in-room-container" class="hidden">
+						<div>
+							<span class="sidebar-title">People in room</span>
+							<button class="btn btn-success btn-xs pull-right" data-toggle="modal" data-target="#roomAddContactsModal">Add</button>
+						</div>
 
-                    <div id="people-in-room" class="sidebar-list">
-                    </div>
+						<div id="people-in-room" class="sidebar-list">
+						</div>
+					</div>
 
 					<div>
 						<span class="sidebar-title">Contacts</span>

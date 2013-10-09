@@ -34,10 +34,10 @@ Contact.prototype.stop = function() {
 	this.contactRef.off();
 	this.contactRef = null;
 
-    if (this.connectionRef) {
-        this.connectionRef.off();
-        this.connectionRef = null;
-    }
+	if (this.connectionRef) {
+		this.connectionRef.off();
+		this.connectionRef = null;
+	}
 };
 
 /////////////////////////////////////////////////////////

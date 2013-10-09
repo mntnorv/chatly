@@ -259,7 +259,9 @@ Chat.prototype.joinRoom = function(roomId) {
         this.roomRef.child('users').on('child_removed',
             this.handleRoomContactRemoved.bind(this));
 
-		this.trigger('joinedRoom', roomId);
+        this.roomRef.child('type').on('value', function (snapshot) {
+        	self.trigger('joinedRoom', roomId, snapshot.val());
+        });
 	} else {
 		// Not connected to Firebase yet
 		// Add this job to the queue

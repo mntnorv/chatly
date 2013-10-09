@@ -9,20 +9,21 @@
 
 	// Set chat callbacks
 	chat.on('contactAdded',     handleContactAdded);
-    chat.on('roomContactAdded', handleRoomContactAdded);
+	chat.on('roomContactAdded', handleRoomContactAdded);
 	chat.on('roomAdded',        handleRoomAdded);
+	chat.on('joinedRoom',       handleRoomJoined);
 	chat.on('leftRoom',         handleLeftRoom);
 	chat.on('gotChatMessage',   handleChatMessage);
 
 	// Start the chat engine!
 	chat.start();
 
-    /**
-     * Describes the current chat state
-     * @property {string} lastUsername - name of the user the last message was received from
-     * @property {string} currentRoom - the id of the current room
-     * @property {string} currentContactRoom - name of the contact with which a one-contact room is joined
-     */
+	/**
+	 * Describes the current chat state
+	 * @property {string} lastUsername - name of the user the last message was received from
+	 * @property {string} currentRoom - the id of the current room
+	 * @property {string} currentContactRoom - name of the contact with which a one-contact room is joined
+	 */
 	var state = {
 		lastUsername: null,
 		currentRoom: null,
@@ -37,17 +38,17 @@
 	/////////////////////////////////////////////////////////
 	// URL hash change handling
 
-    /**
-     * Get the current hash, deparamed
-     * @returns {object}
-     */
+	/**
+	 * Get the current hash, deparamed
+	 * @returns {object}
+	 */
 	function getDeparamedHash() {
 		return $.deparam(window.location.hash.substring(1));
 	}
 
-    /**
-     * Handle the hash change event
-     */
+	/**
+	 * Handle the hash change event
+	 */
 	var handleHashChange = function () {
 		var contactList = $('#contact-list');
 		var chatRooms = $('#chat-rooms');
@@ -55,8 +56,8 @@
 		contactList.children('.active')
 			.removeClass('active');
 
-        chatRooms.children('a > a[data-toggle="modal"]')
-            .remove();
+		chatRooms.children('a > a[data-toggle="modal"]')
+			.remove();
 		chatRooms.children('.active')
 			.removeClass('active');
 
@@ -85,11 +86,11 @@
 	/////////////////////////////////////////////////////////
 	// Sidebar-form-specific functions
 
-    /**
-     * Initialize a sidebar form with one input
-     * @param {string} formSelector - selector of the form to initialize
-     * @param {string} inputSelector - selector of the one input, relative to the form
-     */
+	/**
+	 * Initialize a sidebar form with one input
+	 * @param {string} formSelector - selector of the form to initialize
+	 * @param {string} inputSelector - selector of the one input, relative to the form
+	 */
 	function initSidebarForm(formSelector, inputSelector) {
 		var formElem = $(formSelector);
 		var inputElem = formElem.children(inputSelector);
@@ -122,11 +123,11 @@
 		initSidebarForm('#create-room-form', '[name="roomname"]');
 	});
 
-    /**
-     * Submit the add contact form.
-     * Sends a friend request.
-     * @param form - the form to submit
-     */
+	/**
+	 * Submit the add contact form.
+	 * Sends a friend request.
+	 * @param form - the form to submit
+	 */
 	chatly.submitAddContact = function (form) {
 		var newContactUsername = form.children('[name="username"]').val();
 
@@ -145,11 +146,11 @@
 		);
 	};
 
-    /**
-     * Submit the create room form.
-     * Creates a new room.
-     * @param form - the form to submit
-     */
+	/**
+	 * Submit the create room form.
+	 * Creates a new room.
+	 * @param form - the form to submit
+	 */
 	chatly.submitCreateRoom = function (form) {
 		var newRoomName = form.children('[name="roomname"]').val();
 
@@ -177,13 +178,13 @@
 		});
 	};
 
-    /**
-     * Set a validation error on an input.
-     * Adds a div containing an error after the specified input and adds a parsley-error class
-     * to the input
-     * @param input - the input to add the error to
-     * @param {string} error - the error message
-     */
+	/**
+	 * Set a validation error on an input.
+	 * Adds a div containing an error after the specified input and adds a parsley-error class
+	 * to the input
+	 * @param input - the input to add the error to
+	 * @param {string} error - the error message
+	 */
 	function setInputError (input, error) {
 		input.addClass('parsley-error');
 
@@ -200,12 +201,12 @@
 		}
 	}
 
-    /**
-     * Remove all validation errors from a form.
-     * Removes all elements with the .parsley-error-list class and removes .parsley-error classes from
-     * all of the inputs.
-     * @param form - the form to remove errors from
-     */
+	/**
+	 * Remove all validation errors from a form.
+	 * Removes all elements with the .parsley-error-list class and removes .parsley-error classes from
+	 * all of the inputs.
+	 * @param form - the form to remove errors from
+	 */
 	function removeFormErrors (form) {
 		form.find('.parsley-error').removeClass('parsley-error');
 		form.find('.parsley-error-list').remove();
@@ -214,16 +215,16 @@
 	/////////////////////////////////////////////////////////
 	// Add-contacts-to-room-modal-specific functions
 
-    /**
-     * Add a list of checkable contacts to HTML
-     * @param {Contact[]} contactList - the list of contacts to add
-     * @param container - the container to add the contacts to
-     */
+	/**
+	 * Add a list of checkable contacts to HTML
+	 * @param {Contact[]} contactList - the list of contacts to add
+	 * @param container - the container to add the contacts to
+	 */
 	function addContactsToModal(contactList, container) {
 		for (var username in contactList) {
 			if(contactList.hasOwnProperty(username)) {
 				container.append(
-                    chatly.createCheckableContactElement({username: username}).container
+					chatly.createCheckableContactElement({username: username}).container
 				);
 			}
 		}
@@ -231,26 +232,26 @@
 
 	$(window).load(function() {
 		var contactsModal = $('#roomAddContactsModal');
-        var contactContainer = contactsModal.find('.modal-contact-list');
+		var contactContainer = contactsModal.find('.modal-contact-list');
 
 		contactsModal.on('show.bs.modal', function() {
-            var contacts = chat.getContacts();
-		    addContactsToModal(contacts, contactContainer);
+			var contacts = chat.getContacts();
+			addContactsToModal(contacts, contactContainer);
 		});
 
 		contactsModal.on('hidden.bs.modal', function() {
-		    contactContainer.html('');
+			contactContainer.html('');
 		});
 	});
 
 	/////////////////////////////////////////////////////////
 	// Chat input specific functions
 
-    /**
-     * Submit the chat message form.
-     * Sends the message to the current room.
-     * @param form - the form to submit
-     */
+	/**
+	 * Submit the chat message form.
+	 * Sends the message to the current room.
+	 * @param form - the form to submit
+	 */
 	chatly.submitChatMessage = function (form) {
 		var inputElem = form.find('[name="message"]');
 		var message = inputElem.val();
@@ -261,19 +262,19 @@
 	/////////////////////////////////////////////////////////
 	// Chat callback handlers
 
-    /**
-     * Add a new contact to the sidebar contact list
-     * @param {Contact} newContact - the contact to add
-     */
+	/**
+	 * Add a new contact to the sidebar contact list
+	 * @param {Contact} newContact - the contact to add
+	 */
 	function handleContactAdded(newContact) {
 		// Create a new contact element
-        var contactElem = chatly.createContactElement({
-            username: newContact.username
-        });
+		var contactElem = chatly.createContactElement({
+			username: newContact.username
+		});
 
 		var confirmElem = chatly.createContactConfirmElements({
-            username: newContact.username
-        });
+			username: newContact.username
+		});
 
 		// Highlight current room
 		if (newContact.username === state.currentContactRoom) {
@@ -308,49 +309,49 @@
 		handleStateChange();
 	}
 
-    /**
-     * Add a new contact to the "People in room" section in the sidebar
-     * @param {Contact} newContact - the contact to add
-     */
-    function handleRoomContactAdded(newContact) {
-        // Create a new contact element
-        var contactElem = chatly.createContactElement({
-            username: newContact.username
-        });
+	/**
+	 * Add a new contact to the "People in room" section in the sidebar
+	 * @param {Contact} newContact - the contact to add
+	 */
+	function handleRoomContactAdded(newContact) {
+		// Create a new contact element
+		var contactElem = chatly.createContactElement({
+			username: newContact.username
+		});
 
-        // Handle contact state change
-        var handleStateChange = function () {
-            handleRoomContactStateChanged({
-                contact:     newContact,
-                contactElem: contactElem
-            });
-        };
+		// Handle contact state change
+		var handleStateChange = function () {
+			handleRoomContactStateChanged({
+				contact:     newContact,
+				contactElem: contactElem
+			});
+		};
 
-        // Handle contact removal
-        var handleContactRemoved = function () {
-            contactElem.container.remove();
-        };
+		// Handle contact removal
+		var handleContactRemoved = function () {
+			contactElem.container.remove();
+		};
 
-        // Add new contact element to HTML
-        $('#people-in-room').append(contactElem.container);
+		// Add new contact element to HTML
+		$('#people-in-room').append(contactElem.container);
 
-        // Set contact event handlers
-        newContact.on('stateChanged', handleStateChange);
-        newContact.on('removed', handleContactRemoved);
+		// Set contact event handlers
+		newContact.on('stateChanged', handleStateChange);
+		newContact.on('removed', handleContactRemoved);
 
-        // Set first state
-        handleStateChange();
-    }
+		// Set first state
+		handleStateChange();
+	}
 
-    /**
-     * Change a contact's appearance according to the current state
-     * @param {object} opts
-     * @param {object} opts.confirmElem
-     * @param {object} opts.confirmElem.container - the confirmation element
-     * @param {object} opts.contactElem
-     * @param {object} opts.contactElem.container - the contact element
-     * @param {Contact} opts.contact - the contact to get the state from
-     */
+	/**
+	 * Change a contact's appearance according to the current state
+	 * @param {object} opts
+	 * @param {object} opts.confirmElem
+	 * @param {object} opts.confirmElem.container - the confirmation element
+	 * @param {object} opts.contactElem
+	 * @param {object} opts.contactElem.container - the contact element
+	 * @param {Contact} opts.contact - the contact to get the state from
+	 */
 	function handleContactStateChanged(opts) {
 		var confirmElem = opts.confirmElem;
 		var contactElem = opts.contactElem;
@@ -358,9 +359,9 @@
 
 		if (contactObj.state === "sent") {
 			confirmElem.container.remove();
-            chatly.setContactState(contactElem.status, chatly.contactState.UNKNOWN);
+			chatly.setContactState(contactElem.status, chatly.contactState.UNKNOWN);
 		} else if (contactObj.state === false) {
-            chatly.setContactState(contactElem.status, chatly.contactState.REQUEST);
+			chatly.setContactState(contactElem.status, chatly.contactState.REQUEST);
 			contactElem.append(confirmElem);
 		} else if (contactObj.state === true) {
 			confirmElem.container.remove();
@@ -370,45 +371,45 @@
 			});
 
 			if (contactObj.isLoggedIn) {
-                chatly.setContactState(contactElem.status, chatly.contactState.ONLINE);
+				chatly.setContactState(contactElem.status, chatly.contactState.ONLINE);
 			} else {
-                chatly.setContactState(contactElem.status, chatly.contactState.OFFLINE);
+				chatly.setContactState(contactElem.status, chatly.contactState.OFFLINE);
 			}
 		}
 	}
 
-    /**
-     * Change a contact's appearance according to the current state
-     * @param {object} opts
-     * @param {object} opts.contactElem
-     * @param {object} opts.contactElem.container - the contact element
-     * @param {Contact} opts.contact - the contact to get the state from
-     */
-    function handleRoomContactStateChanged(opts) {
-        var contactElem = opts.contactElem;
-        var contactObj  = opts.contact;
+	/**
+	 * Change a contact's appearance according to the current state
+	 * @param {object} opts
+	 * @param {object} opts.contactElem
+	 * @param {object} opts.contactElem.container - the contact element
+	 * @param {Contact} opts.contact - the contact to get the state from
+	 */
+	function handleRoomContactStateChanged(opts) {
+		var contactElem = opts.contactElem;
+		var contactObj  = opts.contact;
 
-        if (contactObj.state === "sent" || contactObj.state === false) {
-            chatly.setContactState(contactElem.status, chatly.contactState.UNKNOWN);
-        } else if (contactObj.state === true) {
-            if (contactObj.isLoggedIn) {
-                chatly.setContactState(contactElem.status, chatly.contactState.ONLINE);
-            } else {
-                chatly.setContactState(contactElem.status, chatly.contactState.OFFLINE);
-            }
-        }
-    }
+		if (contactObj.state === "sent" || contactObj.state === false) {
+			chatly.setContactState(contactElem.status, chatly.contactState.UNKNOWN);
+		} else if (contactObj.state === true) {
+			if (contactObj.isLoggedIn) {
+				chatly.setContactState(contactElem.status, chatly.contactState.ONLINE);
+			} else {
+				chatly.setContactState(contactElem.status, chatly.contactState.OFFLINE);
+			}
+		}
+	}
 
-    /**
-     * Add a room to the sidebar room list
-     * @param {UserRoom} newRoom - the room to add
-     */
+	/**
+	 * Add a room to the sidebar room list
+	 * @param {UserRoom} newRoom - the room to add
+	 */
 	function handleRoomAdded(newRoom) {
 		// Create the room's HTML element
-        var roomElem = chatly.createRoomElement({
-            id: newRoom.roomId,
-            name: '(loading)'
-        });
+		var roomElem = chatly.createRoomElement({
+			id: newRoom.roomId,
+			name: '(loading)'
+		});
 
 		// Highlight current room
 		var currentRoom = getDeparamedHash().room;
@@ -439,13 +440,13 @@
 		$('#chat-rooms').append(roomElem.container);
 	}
 
-    /**
-     * Add a new message to the main chat window
-     * @param {object} message
-     * @param {string} message.data - the message string
-     * @param {string} message.from - the name of the sender
-     * @param {number} message.time - the time this message was sent
-     */
+	/**
+	 * Add a new message to the main chat window
+	 * @param {object} message
+	 * @param {string} message.data - the message string
+	 * @param {string} message.from - the name of the sender
+	 * @param {number} message.time - the time this message was sent
+	 */
 	function handleChatMessage(message) {
 		// Get chat log container
 		var chatLog = $('#chat-log');
@@ -474,21 +475,31 @@
 		}
 
 		// Create the message element
-        var messageElem = chatly.createMessageElement({
-            data: message.data,
-            time: message.time
-        });
+		var messageElem = chatly.createMessageElement({
+			data: message.data,
+			time: message.time
+		});
 
 		// Append the message element to the chat log
 		chatLog.append(messageElem.container);
 	}
 
-    /**
-     * Clear all messages from the chat window
-     */
+	/**
+	 * Show "People in room" section if joined a multiple-user room
+	 */
+	function handleRoomJoined (roomId, roomType) {
+		if (roomType === 'multipleContactRoom') {
+			$('#people-in-room-container').removeClass('hidden');
+		}
+	}
+
+	/**
+	 * Clear all messages from the chat window
+	 */
 	function handleLeftRoom() {
 		$('#chat-log').html('');
-        $('#people-in-room').html('');
+		$('#people-in-room').html('');
+		$('#people-in-room-container').addClass('hidden');
 		state.lastUsername = null;
 	}
 
