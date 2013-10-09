@@ -1,5 +1,9 @@
 /* Extra small devices (phones, up to 480px) */
 
+#leave-room-btn {
+	margin-bottom: 10px;
+}
+
 /* Small devices (tablets, 768px and up) */
 @media (min-width: 768px) {
 	body, html {

@@ -32,8 +32,9 @@
 
 	/////////////////////////////////////////////////////////
 	// Chat method proxies
-	chatly.confirmRequest = chat.confirmFriendRequest.bind(chat);
-	chatly.removeContact  = chat.removeContact.bind(chat);
+	chatly.confirmRequest    = chat.confirmFriendRequest.bind(chat);
+	chatly.removeContact     = chat.removeContact.bind(chat);
+	chatly.removeCurrentRoom = chat.removeCurrentRoom.bind(chat);
 
 	/////////////////////////////////////////////////////////
 	// URL hash change handling

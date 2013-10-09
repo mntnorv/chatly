@@ -16,6 +16,10 @@
 					</div>
 
 					<div id="people-in-room-container" class="hidden">
+						<button class="btn btn-sm btn-block" id="leave-room-btn" onclick="chatly.removeCurrentRoom();">
+							Leave room
+						</button>
+
 						<div>
 							<span class="sidebar-title">People in room</span>
 							<button class="btn btn-success btn-xs pull-right" data-toggle="modal" data-target="#roomAddContactsModal">Add</button>

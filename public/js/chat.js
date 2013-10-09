@@ -349,14 +349,16 @@ Chat.prototype.leaveCurrentRoom = function() {
  * Leave the current room and remove it from the user's room list.
  */
 Chat.prototype.removeCurrentRoom = function() {
-	var roomId = this.roomRef.name();
+	var roomId  = this.roomRef.name();
+	var roomRef = this.roomRef;
+
+	this.leaveCurrentRoom();
 
 	this.userRef.child('rooms').child(roomId)
 		.set(null);
-	this.roomRef.child('users').child(this.username)
+	roomRef.child('users').child(this.username)
 		.set(null);
-
-	this.leaveCurrentRoom();
+	roomRef = null;
 };
 
 /////////////////////////////////////////////////////////
