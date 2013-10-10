@@ -27,7 +27,8 @@
 	var state = {
 		lastUsername: null,
 		currentRoom: null,
-		currentContactRoom: null
+		currentContactRoom: null,
+		autoScroll: true
 	};
 
 	/////////////////////////////////////////////////////////
@@ -83,6 +84,35 @@
 	window.onhashchange = handleHashChange;
 	// Fire the event to handle the current hash
 	handleHashChange();
+
+	/////////////////////////////////////////////////////////
+	// Chat auto scroll
+
+	// Check if div is scrolled to bottom
+	function checkScroll(event) {
+		var elem = $(event.currentTarget);
+		if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) {
+			state.autoScroll = true;
+		} else {
+			state.autoScroll = false;
+		}
+	}
+
+	// Check if div is scrolled to bottom
+	function scrollToBottom(event) {
+		if (state.autoScroll) {
+			var elem = $(event.currentTarget);
+			elem.scrollTop(
+				elem[0].scrollHeight - elem.height()
+			);
+		}
+	}
+
+	// Initialize the auto scroll thing
+	$(window).load(function() {
+		$('#chat-log').on('scroll', checkScroll);
+		$('#chat-log').on('heightChange', scrollToBottom);
+	});
 
 	/////////////////////////////////////////////////////////
 	// Sidebar-form-specific functions
@@ -483,6 +513,7 @@
 
 		// Append the message element to the chat log
 		chatLog.append(messageElem.container);
+		chatLog.trigger('heightChange');
 	}
 
 	/**
