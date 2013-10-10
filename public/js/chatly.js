@@ -363,7 +363,7 @@
 			chatly.setContactState(contactElem.status, chatly.contactState.UNKNOWN);
 		} else if (contactObj.state === false) {
 			chatly.setContactState(contactElem.status, chatly.contactState.REQUEST);
-			contactElem.append(confirmElem);
+			contactElem.container.append(confirmElem.container);
 		} else if (contactObj.state === true) {
 			confirmElem.container.remove();
 			contactElem.container.attr({

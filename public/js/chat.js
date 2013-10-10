@@ -486,10 +486,12 @@ Chat.prototype.handleContactRemoved = function(snapshot) {
  */
 Chat.prototype.handleRoomContactAdded = function(snapshot) {
     if (snapshot.name() !== this.username) {
+    	var ref = this.userRef.child('contacts').child(snapshot.name());
+
         var newContact = new Contact({
             parent: this,
             username: snapshot.name(),
-            contactRef: snapshot.ref()
+            contactRef: ref
         });
 
         this.roomUsers[snapshot.name()] = newContact;
