@@ -111,7 +111,7 @@
 
 	// Initialize the auto scroll thing
 	$(window).load(function() {
-		$('#chat-log').on('scroll', checkScroll);
+		$('#chat-log').on('scroll', $.throttle(250, checkScroll));
 		$('#chat-log').on('heightChange', scrollToBottom);
 	});
 
