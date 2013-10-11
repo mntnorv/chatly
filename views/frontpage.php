@@ -10,20 +10,13 @@
 <div class="container">
 	<!-- Awesome marketing talk -->
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-6">
 			<h2>Simple</h2>
-			<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-			<p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+			<p>The design is concentrated on simplicity and the main feature - the chat. When you login, there are only two pages you can access - the main chat page and the user settings page. Almost every feature can be accessed from the main chat page. </p>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-6">
 			<h2>Fast</h2>
-			<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-			<p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-		</div>
-		<div class="col-md-4">
-			<h2>Awesome</h2>
-			<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-			<p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+			<p>Chatly uses Firebase as its realtime database, and Firebase is FAST. It is the leading realtime service provider in the industry and can handle thousands of gigabytes of data per second. </p>
 		</div>
 	</div>
 
