@@ -114,8 +114,12 @@
 	 *   main element, the message and time elements.
 	 */
 	chatly.createMessageElement = function (opts) {
+		var dateStr;
+		var msgTime = new Date(opts.time);
+		dateStr = msgTime.format('H:i');
+
 		var timeElem = $('<p class="chat-message-time pull-right"></p>')
-			.append(document.createTextNode(new Date(opts.time).format('H:i')));
+			.append(document.createTextNode(dateStr));
 
 		var messageElem = $('<p class="chat-message-text"></p>')
 			.append(document.createTextNode(opts.data));
@@ -128,6 +132,39 @@
 			container: messageDivElem,
 			message: messageElem,
 			time: timeElem
+		};
+	};
+
+	/**
+	 * Creates a new chat message username element
+	 * @param {object} opts
+	 * @param {string} opts.username - the username to create an element of
+	 * @returns {{container: object}} an object containing the main element.
+	 */
+	chatly.createMessageUsernameElement = function (opts) {
+		var usernameElem = $('<p class="chat-log-username"></p>')
+			.append(document.createTextNode(opts.username));
+
+		return {
+			container: usernameElem
+		};
+	};
+
+	/**
+	 * Creates a new chat message date element
+	 * @param {object} opts
+	 * @param {Date} opts.date - the date to create an element of
+	 * @returns {{container: object}} an object containing the main element.
+	 */
+	chatly.createMessageDateElement = function (opts) {
+		var dateElem = $('<div class="chat-log-date"></div>')
+			.append($('<span></span>')
+				.append(document.createTextNode(opts.date.format('Y-m-d')))
+			)
+		;
+
+		return {
+			container: dateElem
 		};
 	};
 

@@ -111,6 +111,28 @@
 	text-align: right;
 }
 
+.chat-log-date {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	margin-left: 10px;
+	margin-right: 10px;
+
+	height: 1px;
+	text-align: center;
+
+	background-color: #bbb; 
+	color: #bbb;
+}
+
+.chat-log-date > span {
+	position: relative;
+	top: -0.75em;
+	padding-right: 5px;
+	padding-left: 5px;
+
+	background-color: white;
+}
+
 /*
 | Contact status
 */

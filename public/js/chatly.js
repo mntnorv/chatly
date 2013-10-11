@@ -28,7 +28,8 @@
 		lastUsername: null,
 		currentRoom: null,
 		currentContactRoom: null,
-		autoScroll: true
+		autoScroll: true,
+		lastDate: null
 	};
 
 	/////////////////////////////////////////////////////////
@@ -482,6 +483,35 @@
 		// Get chat log container
 		var chatLog = $('#chat-log');
 
+		// Append the date this message was send at if no date was appended
+		// before or the last date is not equal to this one
+		var appendDate = false;
+		if (state.lastDate) {
+			var last    = state.lastDate;
+			var msgTime = new Date(message.time);
+
+			if (last.getDate()     != msgTime.getDate()    ||
+				last.getMonth()    != msgTime.getMonth()   ||
+				last.getFullYear() != msgTime.getFullYear()) {
+
+				appendDate = true;
+			}
+		} else {
+			appendDate = true;
+		}
+
+		state.lastDate = new Date(message.time);
+
+		if (appendDate) {
+			state.lastUsername = null;
+			
+			var messageElem = chatly.createMessageDateElement({
+				date: state.lastDate
+			});
+
+			chatLog.append(messageElem.container);
+		}
+
 		// Append the sender's username to the chat log if there were no chat
 		// messages before or the last message was from another user
 		var appendUsername = false;
@@ -497,12 +527,12 @@
 			state.lastUsername = message.from;
 
 			// Create the username element
-			var usernameElem = $('<p class="chat-log-username"></p>')
-				.attr({'data-username': message.from})
-				.append(document.createTextNode(message.from));
+			var usernameElem = chatly.createMessageUsernameElement({
+				username: message.from
+			});
 
 			// Append the username element to the chat log
-			chatLog.append(usernameElem);
+			chatLog.append(usernameElem.container);
 		}
 
 		// Create the message element
@@ -533,6 +563,7 @@
 		$('#people-in-room').html('');
 		$('#people-in-room-container').addClass('hidden');
 		state.lastUsername = null;
+		state.lastDate     = null;
 	}
 
 }(window.chatly = window.chatly || {}, jQuery));
